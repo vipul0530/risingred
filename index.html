@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rising Red</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link id="gfonts" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Josefin+Sans:wght@300;400;600&family=Lato:wght@300;400;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--accent:#c0392b;--accent-light:#e8564a;--accent-pale:#fdf0ee;--bg:#faf7f4;--dark:#1a1008;--mid:#5c3d2e;--muted:#9a7b6e;--border:rgba(192,57,43,0.15);--font-display:'Cormorant Garamond',serif;--font-body:'DM Sans',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:var(--font-body);background:var(--bg);color:var(--dark);font-size:16px;line-height:1.7;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,247,244,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;}
+#nav-brand{font-family:var(--font-display);font-size:1.6rem;font-weight:600;color:var(--accent);cursor:pointer;text-decoration:none;}
+#nav-items{display:flex;gap:1.5rem;list-style:none;align-items:center;}
+#nav-items a{text-decoration:none;color:var(--mid);font-size:0.82rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:color .2s;}
+#nav-items a:hover{color:var(--accent);}
+.nav-cta{background:var(--accent)!important;color:white!important;padding:.4rem 1rem;border-radius:2rem;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--mid);}
+.rr-page{display:none;padding-top:64px;min-height:100vh;}.rr-page.active{display:block;}
+.hero{min-height:calc(100vh - 64px);display:flex;align-items:center;background:linear-gradient(135deg,var(--accent-pale) 0%,var(--bg) 50%,#f9ece8 100%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-100px;right:-100px;width:600px;height:600px;background:radial-gradient(circle,rgba(192,57,43,.07) 0%,transparent 70%);border-radius:50%;}
+.hero-in{max-width:1100px;margin:0 auto;padding:4rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;position:relative;z-index:1;}
+.hero-h1{font-family:var(--font-display);font-size:clamp(3rem,7vw,5.5rem);font-weight:300;line-height:1.05;color:var(--dark);margin-bottom:1.5rem;}
+.hero-h1 em{font-style:italic;color:var(--accent);}
+.hero-sub{font-size:1.1rem;color:var(--mid);max-width:480px;margin-bottom:2.5rem;line-height:1.8;}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-p{background:var(--accent);color:white;padding:.85rem 2rem;border-radius:2rem;font-weight:500;font-size:.95rem;transition:all .2s;cursor:pointer;border:none;font-family:var(--font-body);}
+.btn-p:hover{background:var(--accent-light);transform:translateY(-2px);}
+.btn-o{border:1.5px solid var(--accent);color:var(--accent);padding:.85rem 2rem;border-radius:2rem;font-weight:500;font-size:.95rem;transition:all .2s;cursor:pointer;background:transparent;font-family:var(--font-body);}
+.btn-o:hover{background:var(--accent);color:white;transform:translateY(-2px);}
+.hero-frame{width:100%;aspect-ratio:3/4;border-radius:2px 40% 2px 40%;overflow:hidden;background:linear-gradient(145deg,#e8c5be,#c9918a);display:flex;align-items:center;justify-content:center;box-shadow:20px 20px 60px rgba(192,57,43,.15);}
+.hero-frame img{width:100%;height:100%;object-fit:cover;}
+.hero-img-wrap{position:relative;}
+.hero-badge{position:absolute;bottom:-20px;left:-20px;background:white;border-radius:1rem;padding:1rem 1.5rem;box-shadow:0 8px 30px rgba(0,0,0,.1);display:flex;align-items:center;gap:.75rem;}
+.badge-n{font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--accent);}
+.badge-t{font-size:.8rem;color:var(--mid);line-height:1.3;}
+.rr-sec{padding:5rem 2rem;}.rr-con{max-width:1100px;margin:0 auto;}
+.s-lbl{font-size:.75rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;display:block;}
+.s-title{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:300;line-height:1.15;color:var(--dark);margin-bottom:1rem;}
+.s-sub{color:var(--mid);font-size:1.05rem;max-width:600px;line-height:1.8;margin-bottom:3rem;}
+.stats-bar{background:var(--accent);padding:3rem 2rem;}
+.stats-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center;}
+.stn{font-family:var(--font-display);font-size:3rem;font-weight:600;color:white;line-height:1;}
+.stl{color:rgba(255,255,255,.75);font-size:.85rem;margin-top:.5rem;}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.story-text p{color:var(--mid);margin-bottom:1.2rem;line-height:1.9;}
+.story-cards{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.sc{background:white;border-radius:12px;padding:1.5rem;border:1px solid var(--border);transition:transform .2s,box-shadow .2s;}
+.sc:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(192,57,43,.1);}
+.sc:nth-child(2),.sc:nth-child(4){margin-top:2rem;}
+.sc-icon{font-size:1.5rem;margin-bottom:.75rem;}
+.sc h4{font-family:var(--font-display);font-size:1.1rem;color:var(--dark);margin-bottom:.4rem;}
+.sc p{font-size:.85rem;color:var(--muted);line-height:1.5;}
+.pg-hero{background:linear-gradient(to bottom,var(--accent-pale),var(--bg));padding:4rem 2rem 3rem;text-align:center;}
+.ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;}
+.ws-card{background:white;border-radius:16px;overflow:hidden;border:1px solid var(--border);transition:transform .2s,box-shadow .2s;}
+.ws-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(192,57,43,.12);}
+.ws-img{height:200px;overflow:hidden;background:linear-gradient(145deg,#e8c5be,#d4958a);display:flex;align-items:center;justify-content:center;}
+.ws-img img{width:100%;height:100%;object-fit:cover;}
+.ws-img .ni{color:rgba(255,255,255,.6);font-size:.8rem;text-align:center;padding:1rem;}
+.ws-body{padding:1.75rem;}
+.ws-tag{display:inline-block;background:var(--accent-pale);color:var(--accent);font-size:.7rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .75rem;border-radius:2rem;margin-bottom:.75rem;}
+.ws-card h3{font-family:var(--font-display);font-size:1.5rem;color:var(--dark);margin-bottom:.5rem;}
+.ws-card>div>p{font-size:.9rem;color:var(--mid);margin-bottom:1rem;line-height:1.7;}
+.ws-card ul{padding-left:1.2rem;}.ws-card ul li{font-size:.85rem;color:var(--mid);margin-bottom:.4rem;}
+.imp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;margin-top:2rem;}
+.imp-card{background:white;border-radius:16px;overflow:hidden;border:1px solid var(--border);display:grid;grid-template-columns:180px 1fr;transition:box-shadow .2s;}
+.imp-card:hover{box-shadow:0 12px 40px rgba(192,57,43,.1);}
+.imp-thumb{background:linear-gradient(145deg,#e2b4ad,#c48880);display:flex;align-items:center;justify-content:center;min-height:160px;overflow:hidden;}
+.imp-thumb img{width:100%;height:100%;object-fit:cover;}
+.imp-thumb .ni{color:rgba(255,255,255,.6);font-size:.75rem;text-align:center;padding:1rem;}
+.imp-body{padding:1.5rem;}
+.imp-body h3{font-family:var(--font-display);font-size:1.3rem;color:var(--dark);margin-bottom:.3rem;}
+.imp-date{font-size:.75rem;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem;}
+.imp-body p{font-size:.88rem;color:var(--mid);line-height:1.7;}
+.team-wrap{display:grid;grid-template-columns:320px 1fr;gap:4rem;align-items:center;max-width:900px;margin:3rem auto;}
+.founder-frame{width:100%;aspect-ratio:3/4;border-radius:2px 30% 2px 30%;overflow:hidden;background:linear-gradient(145deg,#e8c5be,#c9918a);display:flex;align-items:center;justify-content:center;box-shadow:15px 15px 40px rgba(192,57,43,.15);}
+.founder-frame img{width:100%;height:100%;object-fit:cover;}
+.founder-frame .ni{color:rgba(255,255,255,.7);text-align:center;padding:2rem;font-size:.85rem;}
+.founder-info h2{font-family:var(--font-display);font-size:2.5rem;font-weight:300;color:var(--dark);}
+.founder-role{color:var(--accent);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.25rem;display:block;}
+.founder-info p{color:var(--mid);line-height:1.9;margin-bottom:1rem;font-size:.95rem;}
+.join-box{background:var(--accent-pale);border-radius:20px;padding:3rem;text-align:center;max-width:700px;margin:0 auto 3rem;}
+.join-box h3{font-family:var(--font-display);font-size:2rem;color:var(--dark);margin-bottom:1rem;}
+.join-box p{color:var(--mid);margin-bottom:2rem;}
+.partners-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;margin-top:2rem;}
+.pt-card{background:white;border-radius:16px;padding:2rem;border:1px solid var(--border);display:flex;gap:1.5rem;align-items:flex-start;transition:box-shadow .2s;}
+.pt-card:hover{box-shadow:0 10px 30px rgba(192,57,43,.1);}
+.pt-logo{width:70px;height:70px;border-radius:12px;flex-shrink:0;background:var(--accent-pale);display:flex;align-items:center;justify-content:center;font-size:1.75rem;overflow:hidden;}
+.pt-logo img{width:100%;height:100%;object-fit:contain;}
+.pt-info h3{font-family:var(--font-display);font-size:1.4rem;color:var(--dark);margin-bottom:.5rem;}
+.pt-info p{font-size:.9rem;color:var(--mid);line-height:1.7;margin-bottom:.75rem;}
+.pt-link{font-size:.82rem;color:var(--accent);text-decoration:none;font-weight:500;}
+.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;max-width:900px;margin:3rem auto 0;}
+.ct-info h3{font-family:var(--font-display);font-size:1.75rem;color:var(--dark);margin-bottom:1rem;}
+.ct-info p{color:var(--mid);margin-bottom:2rem;line-height:1.8;}
+.ct-row{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.5rem;}
+.ct-icon{width:40px;height:40px;border-radius:50%;background:var(--accent-pale);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ct-txt strong{display:block;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dark);margin-bottom:.2rem;}
+.ct-txt a,.ct-txt span{color:var(--mid);font-size:.9rem;text-decoration:none;}
+.ct-form{background:white;border-radius:16px;padding:2rem;border:1px solid var(--border);}
+.ct-form h3{font-family:var(--font-display);font-size:1.5rem;color:var(--dark);margin-bottom:1.5rem;}
+.fg{margin-bottom:1.25rem;}
+.fg label{display:block;font-size:.8rem;font-weight:500;color:var(--dark);margin-bottom:.4rem;}
+.fg input,.fg textarea,.fg select{width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--dark);font-family:var(--font-body);font-size:.9rem;outline:none;transition:border .2s;}
+.fg input:focus,.fg textarea:focus{border-color:var(--accent);}
+.fg textarea{resize:vertical;min-height:100px;}
+.sub-btn{width:100%;padding:.85rem;background:var(--accent);color:white;border:none;border-radius:2rem;cursor:pointer;font-size:.95rem;font-weight:500;font-family:var(--font-body);transition:all .2s;}
+.sub-btn:hover{background:var(--accent-light);transform:translateY(-2px);}
+.sv-box{background:white;border-radius:16px;padding:3rem;border:1px solid var(--border);margin-top:2rem;max-width:800px;margin-left:auto;margin-right:auto;}
+.sv-wrap{width:100%;min-height:500px;border-radius:8px;overflow:hidden;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;}
+.cs-box{background:var(--dark);border-radius:20px;padding:4rem 2rem;text-align:center;max-width:700px;margin:3rem auto;}
+.cs-box h2{font-family:var(--font-display);font-size:2.5rem;color:white;margin-bottom:1rem;}
+.cs-box p{color:rgba(255,255,255,.65);margin-bottom:2rem;}
+.cs-tag{display:inline-block;background:var(--accent);color:white;padding:.3rem 1rem;border-radius:2rem;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.5rem;}
+.dn-wrap{max-width:800px;margin:0 auto;text-align:center;}
+.dn-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:2.5rem 0;}
+.dn-card{background:white;border-radius:16px;padding:2rem;border:1px solid var(--border);transition:all .2s;}
+.dn-card:hover{border-color:var(--accent);background:var(--accent-pale);}
+.dn-amt{font-family:var(--font-display);font-size:2.5rem;color:var(--accent);margin-bottom:.5rem;}
+.cp-content{max-width:900px;margin:0 auto;padding:2rem;}
+.cp-content h2{font-family:var(--font-display);font-size:2rem;color:var(--dark);margin-bottom:1rem;}
+.cp-content p{color:var(--mid);line-height:1.9;margin-bottom:1rem;}
+footer{background:var(--dark);color:rgba(255,255,255,.65);padding:3rem 2rem;}
+.ft-in{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.ft-brand{font-family:var(--font-display);font-size:1.5rem;color:white;font-weight:600;}
+.ft-links{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.ft-links a{color:rgba(255,255,255,.55);text-decoration:none;font-size:.85rem;cursor:pointer;transition:color .2s;}
+.ft-links a:hover{color:white;}
+.ft-copy{font-size:.8rem;color:rgba(255,255,255,.35);margin-top:1.5rem;text-align:center;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.rr-page.active .a1{animation:fadeUp .7s ease both;}
+.rr-page.active .a2{animation:fadeUp .7s .1s ease both;}
+.rr-page.active .a3{animation:fadeUp .7s .2s ease both;}
+@media(max-width:768px){
+  #nav-items{display:none;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg);padding:1rem 2rem;border-bottom:1px solid var(--border);gap:1rem;}
+  #nav-items.open{display:flex;}
+  .hamburger{display:flex;}
+  .hero-in,.story-grid,.ct-grid{grid-template-columns:1fr;}
+  .hero-img-wrap{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .ws-grid,.imp-grid,.partners-grid,.dn-cards{grid-template-columns:1fr;}
+  .imp-card{grid-template-columns:1fr;}
+  .team-wrap{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a id="nav-brand" onclick="showPage('home')">Rising Red</a>
+  <ul id="nav-items"></ul>
+  <button class="hamburger" onclick="document.getElementById('nav-items').classList.toggle('open')"><span></span><span></span><span></span></button>
+</nav>
+<div id="site-pages"></div>
+<footer>
+  <div class="ft-in">
+    <div class="ft-brand" id="ft-brand">Rising Red</div>
+    <div class="ft-links" id="ft-links"></div>
+  </div>
+  <div class="ft-copy" id="ft-copy">© 2026 Rising Red · Orange County, CA</div>
+</footer>
+<script>
+const DEF = {
+  theme:{accent:'#c0392b',accentLight:'#e8564a',accentPale:'#fdf0ee',bg:'#faf7f4',dark:'#1a1008',mid:'#5c3d2e',fontDisplay:'Cormorant Garamond',fontBody:'DM Sans'},
+  site:{brand:'Rising Red',footerCopy:'© 2026 Rising Red · Orange County, CA · rising.red14@gmail.com',contactEmail:'rising.red14@gmail.com'},
+  pages:[
+    {id:'home',label:'Home',type:'home',visible:true},
+    {id:'workshops',label:'Workshops',type:'workshops',visible:true},
+    {id:'impact',label:'Impact',type:'impact',visible:true},
+    {id:'partners',label:'Partners',type:'partners',visible:true},
+    {id:'team',label:'Team',type:'team',visible:true},
+    {id:'survey',label:'Feedback',type:'survey',visible:true},
+    {id:'community',label:'Community',type:'community',visible:true},
+    {id:'contact',label:'Contact',type:'contact',visible:true},
+    {id:'donate',label:'Donate',type:'donate',visible:true,isDonate:true}
+  ],
+  home:{
+    heroLabel:'Youth-Led Social Movement',heroHeadline:'Your cycle is your',heroHeadlineEm:'strength.',
+    heroSub:'Rising Red is redefining how girls and women understand their bodies — empowering every phase of the menstrual cycle as a source of confidence, creativity, and leadership.',
+    heroBtn1:'Our Workshops',heroBtn1Target:'workshops',heroBtn2:'Support Us',heroBtn2Target:'donate',
+    heroImg:'',badgeNum:'30+',badgeText:'Girls & Women Reached',
+    stats:[{num:'30+',label:'Lives Impacted'},{num:'5+',label:'Workshops Completed'},{num:'3',label:'Community Partners'},{num:'1',label:'Fearless Founder'}],
+    storyLabel:'Our Story',storyTitle:'More than a period. A source of power.',
+    storyP1:'Rising Red started with a simple realization: girls are taught what a period is, but not what it reveals about who they are. We saw girls hiding their experiences while showing empathy, grit, and leadership.',
+    storyP2:'Rising Red exists to make that strength visible. In classrooms, shelters, and community spaces, we don\'t just talk about biology — we talk about identity, confidence, and what it means to rise.',
+    storyP3:'We are the only organization centering workshops entirely on discovering the strengths of each phase of the menstrual cycle.',
+    storyCards:[{icon:'🌱',title:'Menstruation',text:'Understanding each phase as a source of unique strengths.'},{icon:'🌊',title:'Body Literacy',text:'Building self-trust and confidence through real knowledge.'},{icon:'✨',title:'Menopause',text:'Reframing transition as clarity, wisdom, and purpose.'},{icon:'💪',title:'All Genders',text:'Helping everyone become informed, compassionate allies.'}]
+  },
+  workshops:{
+    pageLabel:'What We Offer',pageTitle:'Our Workshops',pageSub:'Interactive sessions — in person and online — that create judgment-free spaces where participants build self-trust, confidence, and body literacy.',
+    ctaTitle:'Bring a Workshop to Your Community',ctaSub:'We visit schools, shelters, and organizations. All workshops are free or low-cost.',ctaBtn:'Get in Touch',ctaBtnTarget:'contact',
+    items:[
+      {tag:'Ages 12+',title:'Menstruation',desc:'Designed for young female teenagers and young adult women who want to understand their cycle as more than just a period.',bullets:['Explore each phase and its unique strengths','Focus, creativity, confidence, and planning','Learn to work with your cycle, not against it','Build self-trust in a judgment-free space'],img:''},
+      {tag:'All Ages',title:'M + M',desc:'Combines menstrual cycle and menopause into one empowering experience exploring how strength evolves across the lifespan.',bullets:['Energy, focus, creativity across life stages','Encourages self-reflection and self-advocacy','Normalizes hormonal changes at every age','Open conversation and genuine connection'],img:''},
+      {tag:'Women 40+',title:'Menopause',desc:'Reframes perimenopause, menopause, and post-menopause as powerful stages of growth and renewed purpose.',bullets:['Emotional clarity, resilience, and confidence','Tools to navigate healthcare confidently','Psychological consistency and freedom','Celebrates this powerful life transition'],img:''}
+    ]
+  },
+  impact:{
+    pageLabel:'Our Reach',pageTitle:'Impact',pageSub:'Every site represents real conversations, lasting learning, and meaningful change.',
+    items:[
+      {org:"Grandma's House of Hope",date:'February 2026',story:'Our very first M+M workshop with older women. Five women shared their stories with honesty and courage — bringing us to tears. Each woman expressed feeling newly empowered in her relationship with her body, many for the first time.',img:''},
+      {org:"Grandma's House of Hope",date:'February 2026',story:'We returned to a second shelter location with 10 participants. Women shared reflections, asked thoughtful questions, and engaged deeply — many expressing feeling empowered and validated.',img:''},
+      {org:"Grandma's House of Hope",date:'February 2026',story:'A third M+M session with five older women. Their openness and courage were truly inspiring. A beautiful reminder of how impactful this work can be for women of all ages.',img:''},
+      {org:'Project S.A.Y. Teen Center',date:'February 2026',story:'A youth-to-youth workshop with seven teens. The peer-to-peer environment created an open and relatable space where teens talked honestly about body cycles and empowerment.',img:''},
+      {org:"Colette's Children's Home",date:'March 12, 2026',story:'A meaningful workshop with six women who shared stories of overcoming homelessness. Many spoke about raising their children with greater awareness around menstrual cycles.',img:''}
+    ]
+  },
+  partners:{
+    pageLabel:'Collaborations',pageTitle:'Our Partners',pageSub:'Together, we create greater impact.',
+    items:[{name:'Balance Her',desc:'We love partnering with Balance Her to help girls work with their cycles. Their cycle-tracking boards come into our workshops with 10% off promo codes for participants.',url:'https://thebalanceher.com',emoji:'⚖️',img:''}]
+  },
+  team:{
+    pageLabel:'The People Behind Rising Red',pageTitle:'Meet the Team',
+    founderImg:'',founderName:'Arya Bhavsar',founderRole:'Founder & Workshop Leader',
+    founderBio1:'Arya Bhavsar is a South Asian high school student in Orange County, class of 2029, and the founder of Rising Red — a youth-led social movement dedicated to empowering girls and challenging stigma around women\'s bodies.',
+    founderBio2:'She started Rising Red as a freshman at just 14 years old and personally leads all of its workshops, demonstrating remarkable initiative by cold-calling schools, shelters, and organizations.',
+    founderBio3:'Arya is deeply passionate about women\'s empowerment. Her drive, creativity, and compassion make her a true force for positive impact.',
+    joinTitle:'Join the Team!',joinText:'Rising Red is always looking for passionate volunteers. Whether it\'s workshops, outreach, social media, or creative projects — there\'s a place for you here.',joinBtn:'Get Involved',joinBtnTarget:'contact'
+  },
+  survey:{pageLabel:'Anonymous Feedback',pageTitle:'Share Your Voice',pageSub:'Your anonymous feedback helps us improve every workshop. No names required.',formIntro:'This form is completely anonymous.',googleFormUrl:''},
+  community:{pageLabel:'Girls Supporting Girls',pageTitle:'Community',pageSub:'A safe space where girls can support each other and rise together.',comingTitle:'The Rising Red Community Chat',comingText:'We\'re building a safe, moderated space where girls and women can connect and support each other. Coming soon!',comingBtn:'Notify Me',comingBtnTarget:'contact'},
+  contact:{pageLabel:'Reach Out',pageTitle:'Contact Us',introTitle:'Let\'s connect.',introText:'Whether you want to bring a workshop to your community, partner with us, volunteer, or just say hello — we\'d love to hear from you.',email:'rising.red14@gmail.com',location:'Orange County, California',workshopAvail:'In Person & Online',formTitle:'Send a Message'},
+  donate:{pageLabel:'Support the Mission',pageTitle:'Donate to Rising Red',pageSub:'Every contribution helps us reach more girls and run more workshops.',tiers:[{amount:'$10',desc:'Provides materials for one workshop participant'},{amount:'$25',desc:'Helps fund supplies for a full workshop session'},{amount:'$50',desc:'Sponsors an entire workshop at a school or shelter'}],donateUrl:'',donateMsg:'To donate, reach out directly at rising.red14@gmail.com',note:'Rising Red is a youth-led initiative working toward official nonprofit status. Donations are not yet tax-deductible.'},
+  customPages:[]
+};
+
+function dmerge(d,s){const o=JSON.parse(JSON.stringify(d));for(const k in s){if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&s[k]!==null){o[k]=dmerge(d[k]||{},s[k]);}else{o[k]=s[k];}}return o;}
+function applyTheme(t){const r=document.documentElement.style;r.setProperty('--accent',t.accent);r.setProperty('--accent-light',t.accentLight);r.setProperty('--accent-pale',t.accentPale);r.setProperty('--bg',t.bg);r.setProperty('--dark',t.dark);r.setProperty('--mid',t.mid||'#5c3d2e');r.setProperty('--font-display',`'${t.fontDisplay}',serif`);r.setProperty('--font-body',`'${t.fontBody}',sans-serif`);}
+function showPage(id){document.querySelectorAll('.rr-page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('pg-'+id);if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}document.getElementById('nav-items').classList.remove('open');}
+function buildNav(d){const nb=document.getElementById('nav-brand');nb.textContent=d.site.brand;document.getElementById('ft-brand').textContent=d.site.brand;document.getElementById('ft-copy').textContent=d.site.footerCopy;const ni=document.getElementById('nav-items');ni.innerHTML='';const fl=document.getElementById('ft-links');fl.innerHTML='';const all=[...d.pages,...(d.customPages||[])].filter(p=>p.visible!==false);all.forEach(pg=>{const li=document.createElement('li');const a=document.createElement('a');a.textContent=pg.label;a.onclick=()=>showPage(pg.id);if(pg.isDonate)a.className='nav-cta';li.appendChild(a);ni.appendChild(li);const fa=document.createElement('a');fa.textContent=pg.label;fa.onclick=()=>showPage(pg.id);fl.appendChild(fa);});}
+function buildPages(d){const c=document.getElementById('site-pages');c.innerHTML='';const all=[...d.pages,...(d.customPages||[])];all.forEach((pg,i)=>{const div=document.createElement('div');div.className='rr-page'+(i===0?' active':'');div.id='pg-'+pg.id;div.innerHTML=renderPage(pg,d);c.appendChild(div);});}
+function renderPage(pg,d){switch(pg.type){case'home':return rHome(d.home);case'workshops':return rWorkshops(d.workshops);case'impact':return rImpact(d.impact);case'partners':return rPartners(d.partners);case'team':return rTeam(d.team);case'survey':return rSurvey(d.survey);case'community':return rCommunity(d.community);case'contact':return rContact(d.contact,d.site.contactEmail);case'donate':return rDonate(d.donate);case'custom':return rCustom(pg);default:return`<div class="rr-sec"><div class="rr-con"><h1 class="s-title">${pg.label}</h1><p style="color:var(--mid)">${pg.content||''}</p></div></div>`;}}
+function rHome(h){return`<section class="hero"><div class="hero-in"><div><span class="s-lbl a1">${h.heroLabel}</span><h1 class="hero-h1 a2">${h.heroHeadline} <em>${h.heroHeadlineEm}</em></h1><p class="hero-sub a2">${h.heroSub}</p><div class="hero-btns a3"><button class="btn-p" onclick="showPage('${h.heroBtn1Target}')">${h.heroBtn1}</button><button class="btn-o" onclick="showPage('${h.heroBtn2Target}')">${h.heroBtn2}</button></div></div><div class="hero-img-wrap"><div class="hero-frame">${h.heroImg?`<img src="${h.heroImg}" alt="Rising Red"/>`:'<div class="ni" style="color:rgba(255,255,255,.7);text-align:center;padding:2rem;font-size:.85rem">🌸<br><br>Add your photo in Admin</div>'}</div><div class="hero-badge"><div class="badge-n">${h.badgeNum}</div><div class="badge-t">${h.badgeText}</div></div></div></div></section><div class="stats-bar"><div class="stats-grid">${h.stats.map(s=>`<div><div class="stn">${s.num}</div><div class="stl">${s.label}</div></div>`).join('')}</div></div><section class="rr-sec"><div class="rr-con"><div class="story-grid"><div class="story-text"><span class="s-lbl">${h.storyLabel}</span><h2 class="s-title">${h.storyTitle}</h2><p>${h.storyP1}</p><p>${h.storyP2}</p><p>${h.storyP3}</p><button class="btn-p" onclick="showPage('workshops')" style="margin-top:1.5rem">See Our Workshops →</button></div><div class="story-cards">${h.storyCards.map(c=>`<div class="sc"><div class="sc-icon">${c.icon}</div><h4>${c.title}</h4><p>${c.text}</p></div>`).join('')}</div></div></div></section>`;}
+function rWorkshops(w){return`<div class="pg-hero"><span class="s-lbl">${w.pageLabel}</span><h1 class="s-title">${w.pageTitle}</h1><p class="s-sub" style="margin:0 auto">${w.pageSub}</p></div><section class="rr-sec"><div class="rr-con"><div class="ws-grid">${w.items.map(ws=>`<div class="ws-card"><div class="ws-img">${ws.img?`<img src="${ws.img}" alt="${ws.title}"/>`:'<div class="ni">📸 Add photo in Admin</div>'}</div><div class="ws-body"><span class="ws-tag">${ws.tag}</span><h3>${ws.title}</h3><p>${ws.desc}</p><ul>${ws.bullets.map(b=>`<li>${b}</li>`).join('')}</ul></div></div>`).join('')}</div><div style="text-align:center;margin-top:3rem;padding:2.5rem;background:var(--accent-pale);border-radius:16px"><h3 style="font-family:var(--font-display);font-size:1.75rem;margin-bottom:.75rem">${w.ctaTitle}</h3><p style="color:var(--mid);margin-bottom:1.5rem">${w.ctaSub}</p><button class="btn-p" onclick="showPage('${w.ctaBtnTarget}')">${w.ctaBtn} →</button></div></div></section>`;}
+function rImpact(imp){return`<div class="pg-hero"><span class="s-lbl">${imp.pageLabel}</span><h1 class="s-title">${imp.pageTitle}</h1><p class="s-sub" style="margin:0 auto">${imp.pageSub}</p></div><section class="rr-sec"><div class="rr-con"><div class="imp-grid">${imp.items.map(i=>`<div class="imp-card"><div class="imp-thumb">${i.img?`<img src="${i.img}" alt="${i.org}"/>`:'<div class="ni">📍</div>'}</div><div class="imp-body"><div class="imp-date">${i.date}</div><h3>${i.org}</h3><p>${i.story}</p></div></div>`).join('')}</div></div></section>`;}
+function rPartners(p){return`<section class="rr-sec"><div class="rr-con"><span class="s-lbl">${p.pageLabel}</span><h1 class="s-title">${p.pageTitle}</h1><p class="s-sub">${p.pageSub}</p><div class="partners-grid">${p.items.map(pt=>`<div class="pt-card"><div class="pt-logo">${pt.img?`<img src="${pt.img}"/>`:(pt.emoji||'🤝')}</div><div class="pt-info"><h3>${pt.name}</h3><p>${pt.desc}</p>${pt.url?`<a href="${pt.url}" target="_blank" class="pt-link">Visit website →</a>`:''}</div></div>`).join('')}<div class="pt-card" style="border-style:dashed;opacity:.5"><div class="pt-logo">➕</div><div class="pt-info"><h3>Become a Partner</h3><p>Interested in collaborating? We'd love to connect.</p><a onclick="showPage('contact')" class="pt-link" style="cursor:pointer">Reach Out →</a></div></div></div></div></section>`;}
+function rTeam(t){return`<div class="pg-hero"><span class="s-lbl">${t.pageLabel}</span><h1 class="s-title">${t.pageTitle}</h1></div><section class="rr-sec"><div class="rr-con"><div class="team-wrap"><div class="founder-frame">${t.founderImg?`<img src="${t.founderImg}" alt="${t.founderName}"/>`:'<div class="ni">🌸<br><br>Add photo in Admin</div>'}</div><div class="founder-info"><h2>${t.founderName}</h2><span class="founder-role">${t.founderRole}</span><p>${t.founderBio1}</p><p>${t.founderBio2}</p><p>${t.founderBio3}</p></div></div><div class="join-box"><h3>${t.joinTitle}</h3><p>${t.joinText}</p><button class="btn-p" onclick="showPage('${t.joinBtnTarget}')">${t.joinBtn} →</button></div></div></section>`;}
+function rSurvey(s){return`<section class="rr-sec"><div class="rr-con" style="text-align:center"><span class="s-lbl">${s.pageLabel}</span><h1 class="s-title">${s.pageTitle}</h1><p class="s-sub" style="margin:0 auto">${s.pageSub}</p><div class="sv-box"><p style="color:var(--mid);margin-bottom:1.5rem">${s.formIntro}</p><div class="sv-wrap">${s.googleFormUrl?`<iframe src="${s.googleFormUrl}" width="100%" height="600" frameborder="0">Loading…</iframe>`:'<div style="color:var(--muted);text-align:center;padding:2rem">📋<br><br><strong>Google Form goes here</strong><br><span style="font-size:.8rem">Add your form URL in Admin</span></div>'}</div></div></div></section>`;}
+function rCommunity(c){return`<section class="rr-sec"><div class="rr-con" style="text-align:center"><span class="s-lbl">${c.pageLabel}</span><h1 class="s-title">${c.pageTitle}</h1><p class="s-sub" style="margin:0 auto">${c.pageSub}</p><div class="cs-box"><span class="cs-tag">Coming Soon</span><h2>${c.comingTitle}</h2><p>${c.comingText}</p><button class="btn-p" onclick="showPage('${c.comingBtnTarget}')">${c.comingBtn} →</button></div></div></section>`;}
+function rContact(c,email){return`<section class="rr-sec"><div class="rr-con"><span class="s-lbl">${c.pageLabel}</span><h1 class="s-title">${c.pageTitle}</h1><div class="ct-grid"><div class="ct-info"><h3>${c.introTitle}</h3><p>${c.introText}</p><div class="ct-row"><div class="ct-icon">✉</div><div class="ct-txt"><strong>Email</strong><a href="mailto:${c.email}">${c.email}</a></div></div><div class="ct-row"><div class="ct-icon">📍</div><div class="ct-txt"><strong>Location</strong><span>${c.location}</span></div></div><div class="ct-row"><div class="ct-icon">🌐</div><div class="ct-txt"><strong>Workshops</strong><span>${c.workshopAvail}</span></div></div></div><div class="ct-form"><h3>${c.formTitle}</h3><div class="fg"><label>Your Name</label><input type="text" id="cf-name" placeholder="Jane Smith"/></div><div class="fg"><label>Email</label><input type="email" id="cf-email" placeholder="jane@example.com"/></div><div class="fg"><label>Reason</label><select id="cf-reason"><option>Bringing a workshop to my school/org</option><option>Volunteering / Joining the team</option><option>Partnership opportunity</option><option>Donating / Supporting Rising Red</option><option>General question</option></select></div><div class="fg"><label>Message</label><textarea id="cf-msg" placeholder="Tell us how you'd like to connect..."></textarea></div><button class="sub-btn" onclick="submitContact('${email}')">Send Message</button><div id="cf-ok" style="display:none;background:var(--accent-pale);border-radius:8px;padding:1rem;text-align:center;color:var(--accent);margin-top:1rem;font-size:.9rem">✓ Message sent! 💌</div></div></div></div></section>`;}
+function rDonate(d){return`<section class="rr-sec"><div class="rr-con"><div class="dn-wrap"><span class="s-lbl">${d.pageLabel}</span><h1 class="s-title">${d.pageTitle}</h1><p class="s-sub" style="margin:0 auto">${d.pageSub}</p><div class="dn-cards">${d.tiers.map(t=>`<div class="dn-card"><div class="dn-amt">${t.amount}</div><p style="font-size:.85rem;color:var(--mid)">${t.desc}</p></div>`).join('')}</div><div style="background:white;border-radius:12px;border:1px solid var(--border);padding:2rem;text-align:center">${d.donateUrl?`<a href="${d.donateUrl}" target="_blank" class="btn-p" style="display:inline-block;text-decoration:none">Donate Now →</a>`:`<p style="color:var(--mid)">${d.donateMsg}</p>`}</div><p style="color:var(--muted);font-size:.85rem;margin-top:1.5rem">${d.note}</p></div></div></section>`;}
+function rCustom(pg){return`<div class="pg-hero"><h1 class="s-title">${pg.label}</h1>${pg.subtitle?`<p class="s-sub" style="margin:0 auto">${pg.subtitle}</p>`:''}</div><section class="rr-sec"><div class="rr-con cp-content">${pg.content||'<p>Page content goes here.</p>'}</div></section>`;}
+function submitContact(email){const n=document.getElementById('cf-name')?.value.trim(),e=document.getElementById('cf-email')?.value.trim(),m=document.getElementById('cf-msg')?.value.trim();if(!n||!e||!m){alert('Please fill in name, email, and message.');return;}window.location.href=`mailto:${email}?subject=${encodeURIComponent('Rising Red Website Contact')}&body=${encodeURIComponent(`Name: ${n}\nEmail: ${e}\n\n${m}`)}`;const ok=document.getElementById('cf-ok');if(ok)ok.style.display='block';}
+async function init(){
+  // Show site immediately with defaults while loading
+  let d = JSON.parse(JSON.stringify(DEF));
+  applyTheme(d.theme); buildNav(d); buildPages(d);
+  document.title = d.site.brand || 'Rising Red';
+  // Then fetch real data from server
+  try {
+    const res = await fetch('/.netlify/functions/get-data');
+    if (res.ok) {
+      const saved = await res.json();
+      if (saved && Object.keys(saved).length > 0) {
+        d = dmerge(DEF, saved);
+        applyTheme(d.theme); buildNav(d); buildPages(d);
+        document.title = d.site.brand || 'Rising Red';
+      }
+    }
+  } catch(e) { /* use defaults */ }
+}
+init();
+</script>
+</body>
+</html>

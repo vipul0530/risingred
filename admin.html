@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rising Red — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#c0392b;--red-l:#e8564a;--pale:#fdf0ee;--cream:#faf7f4;--dark:#1a1008;--mid:#5c3d2e;--muted:#9a7b6e;--border:rgba(192,57,43,0.2);--green:#27ae60;--side:230px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#f0ebe7;color:var(--dark);font-size:14px;}
+/* LOGIN */
+#ls{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fdf0ee,#faf7f4);}
+.lb{background:white;border-radius:20px;padding:3rem;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(192,57,43,.12);text-align:center;}
+.lb h1{font-family:'DM Sans',sans-serif;font-size:1.6rem;color:var(--red);font-weight:600;margin-bottom:.25rem;}
+.lb p{color:var(--muted);font-size:.85rem;margin-bottom:2rem;}
+.lb input{width:100%;padding:.85rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-size:.95rem;font-family:'DM Sans',sans-serif;margin-bottom:1rem;outline:none;transition:border .2s;}
+.lb input:focus{border-color:var(--red);}
+.lb button{width:100%;padding:.9rem;background:var(--red);color:white;border:none;border-radius:2rem;font-size:1rem;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;}
+.lb button:hover{background:var(--red-l);}
+#le{color:var(--red);font-size:.85rem;margin-top:.75rem;display:none;}
+/* LAYOUT */
+#as{display:none;}
+.wrap{display:flex;}
+/* SIDEBAR */
+.sb{width:var(--side);background:var(--dark);min-height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;overflow-y:auto;}
+.sb-logo{font-size:1.3rem;color:white;font-weight:600;padding:1.5rem 1.5rem .25rem;}
+.sb-tag{font-size:.65rem;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;padding:0 1.5rem;margin-bottom:1.5rem;}
+.sb-sec{font-size:.62rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-transform:uppercase;padding:.5rem 1.5rem;margin-top:1rem;}
+.ni{display:flex;align-items:center;gap:.6rem;padding:.6rem 1.5rem;color:rgba(255,255,255,.65);font-size:.85rem;cursor:pointer;transition:all .2s;border-left:3px solid transparent;}
+.ni:hover{color:white;background:rgba(255,255,255,.05);}
+.ni.active{color:white;background:rgba(192,57,43,.2);border-left-color:var(--red);}
+.ni .ic{font-size:.95rem;width:18px;text-align:center;}
+.sb-bot{margin-top:auto;padding:1.5rem;display:flex;flex-direction:column;gap:.5rem;}
+.prev-btn{padding:.65rem;background:var(--red);color:white;border:none;border-radius:2rem;font-size:.82rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s;text-align:center;}
+.prev-btn:hover{background:var(--red-l);}
+.lo-btn{padding:.55rem;background:transparent;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.15);border-radius:2rem;font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.lo-btn:hover{color:white;border-color:rgba(255,255,255,.4);}
+/* MAIN */
+.main{margin-left:var(--side);flex:1;padding:2rem;}
+.panel{display:none;}.panel.active{display:block;}
+.ph{margin-bottom:1.5rem;}
+.ph h1{font-size:1.6rem;font-weight:500;color:var(--dark);}
+.ph p{color:var(--muted);font-size:.88rem;margin-top:.2rem;}
+/* CARDS */
+.card{background:white;border-radius:14px;padding:1.5rem;border:1px solid rgba(192,57,43,.1);margin-bottom:1.25rem;}
+.card-hd{font-weight:500;color:var(--dark);margin-bottom:1.25rem;font-size:.95rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
+.card-hd .badge{background:var(--pale);color:var(--red);font-size:.68rem;padding:.2rem .6rem;border-radius:2rem;font-weight:500;}
+/* FIELDS */
+.f{margin-bottom:1rem;}
+.f label{display:block;font-size:.75rem;font-weight:500;color:var(--mid);margin-bottom:.3rem;letter-spacing:.04em;text-transform:uppercase;}
+.f input,.f textarea,.f select{width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--dark);background:var(--cream);outline:none;transition:border .2s;}
+.f input:focus,.f textarea:focus,.f select:focus{border-color:var(--red);}
+.f textarea{resize:vertical;min-height:75px;}
+.f .note{font-size:.72rem;color:var(--muted);margin-top:.25rem;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+/* BUTTONS */
+.btn{padding:.55rem 1.25rem;border-radius:2rem;font-size:.85rem;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:.4rem;}
+.btn-red{background:var(--red);color:white;}.btn-red:hover{background:var(--red-l);}
+.btn-ghost{background:transparent;color:var(--red);border:1.5px solid var(--red);}.btn-ghost:hover{background:var(--red);color:white;}
+.btn-danger{background:#e74c3c;color:white;}.btn-danger:hover{background:#c0392b;}
+.btn-green{background:var(--green);color:white;}.btn-green:hover{background:#219a52;}
+.btn-sm{padding:.35rem .85rem;font-size:.78rem;}
+.btn-dark{background:var(--dark);color:white;}.btn-dark:hover{background:#2d1a10;}
+/* SAVE TOAST */
+#toast{position:fixed;bottom:2rem;right:2rem;background:var(--green);color:white;padding:.8rem 1.5rem;border-radius:2rem;font-size:.88rem;font-weight:500;box-shadow:0 8px 30px rgba(39,174,96,.3);transform:translateY(100px);opacity:0;transition:all .3s;z-index:999;}
+#toast.show{transform:translateY(0);opacity:1;}
+/* ITEM LIST */
+.item-list{display:flex;flex-direction:column;gap:.65rem;}
+.item-row{background:var(--cream);border-radius:10px;padding:.85rem 1rem;display:flex;align-items:flex-start;gap:.85rem;border:1px solid var(--border);}
+.item-thumb{width:52px;height:52px;border-radius:8px;background:linear-gradient(145deg,#e8c5be,#c9918a);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.item-thumb img{width:100%;height:100%;object-fit:cover;}
+.item-info{flex:1;min-width:0;}
+.item-info strong{display:block;font-size:.88rem;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.item-info span{font-size:.78rem;color:var(--muted);}
+.item-acts{display:flex;gap:.4rem;flex-shrink:0;}
+/* IMG UPLOAD */
+.img-area{border:2px dashed var(--border);border-radius:10px;padding:1.25rem;text-align:center;cursor:pointer;transition:border .2s;background:var(--cream);position:relative;overflow:hidden;}
+.img-area:hover{border-color:var(--red);}
+.img-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.img-area p{color:var(--muted);font-size:.82rem;}
+.img-prev{width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-top:.65rem;display:none;}
+/* MODAL */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem;}
+.mbg.open{display:flex;}
+.modal{background:white;border-radius:18px;padding:1.75rem;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;}
+.mhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.mhd h2{font-size:1.3rem;font-weight:500;color:var(--dark);}
+.mclose{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted);}
+.mft{display:flex;gap:.65rem;justify-content:flex-end;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);}
+/* THEME */
+.color-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;}
+.color-item{display:flex;flex-direction:column;gap:.3rem;}
+.color-item label{font-size:.72rem;font-weight:500;color:var(--mid);text-transform:uppercase;letter-spacing:.04em;}
+.color-item input[type=color]{width:100%;height:40px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;padding:2px;background:var(--cream);}
+.font-preview{background:var(--cream);border-radius:8px;padding:.75rem 1rem;font-size:1.1rem;color:var(--dark);border:1px solid var(--border);text-align:center;margin-top:.5rem;}
+/* PAGES MANAGER */
+.pages-list{display:flex;flex-direction:column;gap:.5rem;}
+.page-row{background:var(--cream);border-radius:10px;padding:.85rem 1rem;display:flex;align-items:center;gap:.75rem;border:1px solid var(--border);}
+.page-drag{color:var(--muted);cursor:grab;font-size:1rem;}
+.page-info{flex:1;}
+.page-info strong{display:block;font-size:.88rem;color:var(--dark);}
+.page-info span{font-size:.75rem;color:var(--muted);}
+.page-badge{font-size:.68rem;background:var(--pale);color:var(--red);padding:.15rem .5rem;border-radius:2rem;}
+.toggle{position:relative;display:inline-block;width:36px;height:20px;}
+.toggle input{opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:#ccc;border-radius:2rem;transition:.3s;cursor:pointer;}
+.slider:before{content:'';position:absolute;height:14px;width:14px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.3s;}
+input:checked+.slider{background:var(--green);}
+input:checked+.slider:before{transform:translateX(16px);}
+/* STATS EDIT */
+.stats-edit{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.stat-ec{background:var(--cream);border-radius:10px;padding:.85rem;border:1px solid var(--border);}
+.stat-ec label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.3rem;}
+.stat-ec input{width:100%;border:1.5px solid var(--border);border-radius:6px;padding:.45rem .75rem;font-size:.9rem;font-family:'DM Sans',sans-serif;background:white;outline:none;}
+.stat-ec input:focus{border-color:var(--red);}
+/* BULLETS EDITOR */
+.bullet-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem;}
+.bullet-row{display:flex;gap:.4rem;align-items:center;}
+.bullet-row input{flex:1;padding:.5rem .75rem;border:1.5px solid var(--border);border-radius:6px;font-size:.88rem;font-family:'DM Sans',sans-serif;background:var(--cream);outline:none;}
+.bullet-row input:focus{border-color:var(--red);}
+.del-bullet{background:#fee;color:#e74c3c;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:1rem;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="ls">
+  <div class="lb">
+    <h1>Rising Red</h1>
+    <p>Admin Dashboard · Arya's Panel</p>
+    <input type="password" id="pw" placeholder="Enter your password" onkeydown="if(event.key==='Enter')login()"/>
+    <button onclick="login()">Sign In</button>
+    <div id="le">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="as">
+<div class="wrap">
+<div class="sb">
+  <div class="sb-logo">Rising Red</div>
+  <div class="sb-tag">Admin Dashboard</div>
+  <div class="sb-sec">Site Settings</div>
+  <div class="ni active" onclick="sp('design')"><span class="ic">🎨</span>Design & Fonts</div>
+  <div class="ni" onclick="sp('site')"><span class="ic">⚙️</span>Site Settings</div>
+  <div class="ni" onclick="sp('pages')"><span class="ic">📄</span>Pages Manager</div>
+  <div class="sb-sec">Page Content</div>
+  <div class="ni" onclick="sp('home')"><span class="ic">🏠</span>Home Page</div>
+  <div class="ni" onclick="sp('workshops')"><span class="ic">📚</span>Workshops</div>
+  <div class="ni" onclick="sp('impact')"><span class="ic">✨</span>Impact Stories</div>
+  <div class="ni" onclick="sp('partners')"><span class="ic">🤝</span>Partners</div>
+  <div class="ni" onclick="sp('team')"><span class="ic">👩</span>Team</div>
+  <div class="ni" onclick="sp('survey')"><span class="ic">📋</span>Feedback Survey</div>
+  <div class="ni" onclick="sp('community')"><span class="ic">💬</span>Community</div>
+  <div class="ni" onclick="sp('contact')"><span class="ic">📬</span>Contact</div>
+  <div class="ni" onclick="sp('donate')"><span class="ic">💝</span>Donate</div>
+  <div class="sb-sec">Account</div>
+  <div class="ni" onclick="sp('account')"><span class="ic">🔒</span>Password</div>
+  <div class="ni" onclick="sp('data')"><span class="ic">💾</span>Backup & Data</div>
+  <div class="sb-bot">
+    <button class="prev-btn" onclick="window.open('index.html','_blank')">👁 Preview Site</button>
+    <button class="lo-btn" onclick="logout()">Sign Out</button>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- DESIGN -->
+<div class="panel active" id="p-design">
+  <div class="ph"><h1>Design & Fonts</h1><p>Change your colors, fonts, and overall look.</p></div>
+  <div class="card">
+    <div class="card-hd">🎨 Colors</div>
+    <div class="color-row">
+      <div class="color-item"><label>Primary / Accent</label><input type="color" id="c-accent" value="#c0392b" oninput="previewColor()"/></div>
+      <div class="color-item"><label>Accent Hover</label><input type="color" id="c-accent-light" value="#e8564a" oninput="previewColor()"/></div>
+      <div class="color-item"><label>Accent Pale (bg tint)</label><input type="color" id="c-accent-pale" value="#fdf0ee" oninput="previewColor()"/></div>
+      <div class="color-item"><label>Page Background</label><input type="color" id="c-bg" value="#faf7f4" oninput="previewColor()"/></div>
+      <div class="color-item"><label>Dark (text/footer)</label><input type="color" id="c-dark" value="#1a1008" oninput="previewColor()"/></div>
+      <div class="color-item"><label>Body Text</label><input type="color" id="c-mid" value="#5c3d2e" oninput="previewColor()"/></div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+      <button class="btn btn-ghost btn-sm" onclick="setPreset('red')">🌹 Classic Red</button>
+      <button class="btn btn-ghost btn-sm" onclick="setPreset('navy')">🌊 Navy Blue</button>
+      <button class="btn btn-ghost btn-sm" onclick="setPreset('emerald')">🌿 Emerald</button>
+      <button class="btn btn-ghost btn-sm" onclick="setPreset('purple')">💜 Purple</button>
+      <button class="btn btn-ghost btn-sm" onclick="setPreset('gold')">✨ Gold</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd">✍️ Fonts</div>
+    <div class="row2">
+      <div class="f">
+        <label>Display / Headline Font</label>
+        <select id="font-display" onchange="updateFontPreview()">
+          <option value="Cormorant Garamond">Cormorant Garamond (elegant serif)</option>
+          <option value="Playfair Display">Playfair Display (classic serif)</option>
+          <option value="Libre Baskerville">Libre Baskerville (bookish)</option>
+          <option value="Merriweather">Merriweather (readable serif)</option>
+          <option value="Josefin Sans">Josefin Sans (modern sans)</option>
+          <option value="Raleway">Raleway (geometric)</option>
+          <option value="DM Sans">DM Sans (clean modern)</option>
+        </select>
+        <div class="font-preview" id="font-display-preview">Your cycle is your strength.</div>
+      </div>
+      <div class="f">
+        <label>Body / Paragraph Font</label>
+        <select id="font-body" onchange="updateFontPreview()">
+          <option value="DM Sans">DM Sans (clean modern)</option>
+          <option value="Lato">Lato (friendly)</option>
+          <option value="Raleway">Raleway (geometric)</option>
+          <option value="Josefin Sans">Josefin Sans (editorial)</option>
+          <option value="Libre Baskerville">Libre Baskerville (classic)</option>
+        </select>
+        <div class="font-preview" id="font-body-preview" style="font-size:.9rem">Rising Red empowers girls to understand their bodies as a source of strength.</div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-red" onclick="saveDesign()">💾 Save Design</button>
+</div>
+
+<!-- SITE SETTINGS -->
+<div class="panel" id="p-site">
+  <div class="ph"><h1>Site Settings</h1><p>Edit your brand name, footer, and contact email.</p></div>
+  <div class="card">
+    <div class="f"><label>Site / Brand Name (shown in nav & footer)</label><input id="s-brand" placeholder="Rising Red"/></div>
+    <div class="f"><label>Footer Copyright Text</label><input id="s-footer" placeholder="© 2026 Rising Red · Orange County, CA"/></div>
+    <div class="f"><label>Contact Email (used in contact form & footer)</label><input id="s-email" placeholder="rising.red14@gmail.com"/></div>
+  </div>
+  <button class="btn btn-red" onclick="saveSite()">💾 Save Site Settings</button>
+</div>
+
+<!-- PAGES MANAGER -->
+<div class="panel" id="p-pages">
+  <div class="ph"><h1>Pages Manager</h1><p>Show/hide pages, rename nav labels, add or remove custom pages.</p></div>
+  <div class="card">
+    <div class="card-hd">Built-in Pages <span class="badge">Toggle visibility & rename</span></div>
+    <div class="pages-list" id="builtin-pages-list"></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Custom Pages <span class="badge">Your own new pages</span></div>
+    <div class="pages-list" id="custom-pages-list"></div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:1rem" onclick="openCustomPageModal(-1)">＋ Add New Page</button>
+  </div>
+  <button class="btn btn-red" onclick="savePages()">💾 Save Pages</button>
+</div>
+
+<!-- HOME -->
+<div class="panel" id="p-home">
+  <div class="ph"><h1>Home Page</h1><p>Edit every word on your homepage.</p></div>
+  <div class="card">
+    <div class="card-hd">🖼 Hero Section</div>
+    <div class="f"><label>Small Label (above headline)</label><input id="h-label" placeholder="Youth-Led Social Movement"/></div>
+    <div class="row2">
+      <div class="f"><label>Headline (main text)</label><input id="h-headline" placeholder="Your cycle is your"/></div>
+      <div class="f"><label>Headline Emphasis (italic colored word)</label><input id="h-em" placeholder="strength."/></div>
+    </div>
+    <div class="f"><label>Subtext / Description</label><textarea id="h-sub"></textarea></div>
+    <div class="row2">
+      <div class="f"><label>Button 1 Text</label><input id="h-btn1" placeholder="Our Workshops"/></div>
+      <div class="f"><label>Button 1 Links To</label>
+        <select id="h-btn1t"><option value="workshops">Workshops</option><option value="impact">Impact</option><option value="team">Team</option><option value="contact">Contact</option><option value="donate">Donate</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="f"><label>Button 2 Text</label><input id="h-btn2" placeholder="Support Us"/></div>
+      <div class="f"><label>Button 2 Links To</label>
+        <select id="h-btn2t"><option value="donate">Donate</option><option value="contact">Contact</option><option value="workshops">Workshops</option><option value="impact">Impact</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="f"><label>Badge Number</label><input id="h-bnum" placeholder="30+"/></div>
+      <div class="f"><label>Badge Text</label><input id="h-btxt" placeholder="Girls & Women Reached"/></div>
+    </div>
+    <div class="f"><label>Hero Photo</label>
+      <div class="img-area" onclick="trigUpload('hero-img')">
+        <input type="file" id="hero-img" accept="image/*" onchange="handleImg(this,'hero-img-prev','heroImg')"/>
+        <p>📸 Click to upload photo</p>
+        <img class="img-prev" id="hero-img-prev"/>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd">📊 Stats Bar</div>
+    <div class="stats-edit" id="stats-edit"></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">📖 Story Section</div>
+    <div class="f"><label>Section Label</label><input id="h-slabel" placeholder="Our Story"/></div>
+    <div class="f"><label>Section Title</label><input id="h-stitle" placeholder="More than a period. A source of power."/></div>
+    <div class="f"><label>Paragraph 1</label><textarea id="h-sp1"></textarea></div>
+    <div class="f"><label>Paragraph 2</label><textarea id="h-sp2"></textarea></div>
+    <div class="f"><label>Paragraph 3</label><textarea id="h-sp3"></textarea></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">🃏 Story Cards (4 cards)</div>
+    <div id="story-cards-editor"></div>
+  </div>
+  <button class="btn btn-red" onclick="saveHome()">💾 Save Home Page</button>
+</div>
+
+<!-- WORKSHOPS -->
+<div class="panel" id="p-workshops">
+  <div class="ph"><h1>Workshops Page</h1><p>Edit your workshop offerings.</p></div>
+  <div class="card">
+    <div class="card-hd">Page Header</div>
+    <div class="row2">
+      <div class="f"><label>Small Label</label><input id="wk-label" placeholder="What We Offer"/></div>
+      <div class="f"><label>Page Title</label><input id="wk-title" placeholder="Our Workshops"/></div>
+    </div>
+    <div class="f"><label>Page Subtitle</label><textarea id="wk-sub" rows="2"></textarea></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Call-to-Action Banner</div>
+    <div class="f"><label>Banner Title</label><input id="wk-cta-title"/></div>
+    <div class="f"><label>Banner Subtitle</label><input id="wk-cta-sub"/></div>
+    <div class="row2">
+      <div class="f"><label>Button Text</label><input id="wk-cta-btn"/></div>
+      <div class="f"><label>Button Links To</label><select id="wk-cta-target"><option value="contact">Contact</option><option value="donate">Donate</option></select></div>
+    </div>
+  </div>
+  <div id="workshops-editor"></div>
+  <button class="btn btn-ghost" style="margin-bottom:1rem" onclick="addWorkshop()">＋ Add Workshop</button>
+  <button class="btn btn-red" onclick="saveWorkshops()">💾 Save Workshops</button>
+</div>
+
+<!-- IMPACT -->
+<div class="panel" id="p-impact">
+  <div class="ph"><h1>Impact Stories</h1><p>Add, edit, or remove workshop stories.</p></div>
+  <div class="card">
+    <div class="card-hd">Page Header</div>
+    <div class="row2">
+      <div class="f"><label>Small Label</label><input id="imp-label"/></div>
+      <div class="f"><label>Page Title</label><input id="imp-title"/></div>
+    </div>
+    <div class="f"><label>Subtitle</label><input id="imp-sub"/></div>
+  </div>
+  <div class="item-list" id="impact-list"></div>
+  <button class="btn btn-ghost" style="margin-top:1rem" onclick="openImpactModal(-1)">＋ Add New Story</button>
+  <div style="margin-top:1rem"><button class="btn btn-red" onclick="saveImpactHeader()">💾 Save Impact Page</button></div>
+</div>
+
+<!-- PARTNERS -->
+<div class="panel" id="p-partners">
+  <div class="ph"><h1>Partners</h1><p>Manage your partner organizations.</p></div>
+  <div class="card">
+    <div class="card-hd">Page Header</div>
+    <div class="row2">
+      <div class="f"><label>Small Label</label><input id="pt-label"/></div>
+      <div class="f"><label>Page Title</label><input id="pt-title"/></div>
+    </div>
+    <div class="f"><label>Subtitle</label><input id="pt-sub"/></div>
+  </div>
+  <div class="item-list" id="partners-list"></div>
+  <button class="btn btn-ghost" style="margin-top:1rem" onclick="openPartnerModal(-1)">＋ Add Partner</button>
+  <div style="margin-top:1rem"><button class="btn btn-red" onclick="savePartnersHeader()">💾 Save Partners Page</button></div>
+</div>
+
+<!-- TEAM -->
+<div class="panel" id="p-team">
+  <div class="ph"><h1>Team Page</h1><p>Edit your profile and team section.</p></div>
+  <div class="card">
+    <div class="card-hd">Page Header</div>
+    <div class="row2">
+      <div class="f"><label>Small Label</label><input id="tm-label"/></div>
+      <div class="f"><label>Page Title</label><input id="tm-title"/></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd">🌸 Your Profile</div>
+    <div class="f"><label>Your Photo</label>
+      <div class="img-area" onclick="trigUpload('founder-img')">
+        <input type="file" id="founder-img" accept="image/*" onchange="handleImg(this,'founder-img-prev','founderImg')"/>
+        <p>📸 Click to upload your photo</p>
+        <img class="img-prev" id="founder-img-prev"/>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="f"><label>Your Name</label><input id="tm-name"/></div>
+      <div class="f"><label>Your Role/Title</label><input id="tm-role"/></div>
+    </div>
+    <div class="f"><label>Bio Paragraph 1</label><textarea id="tm-bio1"></textarea></div>
+    <div class="f"><label>Bio Paragraph 2</label><textarea id="tm-bio2"></textarea></div>
+    <div class="f"><label>Bio Paragraph 3</label><textarea id="tm-bio3"></textarea></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Join Box</div>
+    <div class="f"><label>Join Title</label><input id="tm-jtitle"/></div>
+    <div class="f"><label>Join Text</label><textarea id="tm-jtext" rows="2"></textarea></div>
+    <div class="row2">
+      <div class="f"><label>Button Text</label><input id="tm-jbtn"/></div>
+      <div class="f"><label>Button Links To</label><select id="tm-jbtarget"><option value="contact">Contact</option><option value="donate">Donate</option></select></div>
+    </div>
+  </div>
+  <button class="btn btn-red" onclick="saveTeam()">💾 Save Team Page</button>
+</div>
+
+<!-- SURVEY -->
+<div class="panel" id="p-survey">
+  <div class="ph"><h1>Feedback Survey</h1><p>Connect your Google Form.</p></div>
+  <div class="card">
+    <div class="row2">
+      <div class="f"><label>Small Label</label><input id="sv-label"/></div>
+      <div class="f"><label>Page Title</label><input id="sv-title"/></div>
+    </div>
+    <div class="f"><label>Subtitle</label><input id="sv-sub"/></div>
+    <div class="f"><label>Form Intro Text</label><input id="sv-intro"/></div>
+    <div class="f"><label>Google Form Embed URL</label>
+      <input id="sv-url" placeholder="https://docs.google.com/forms/d/e/YOUR_ID/viewform?embedded=true"/>
+      <div class="note">In Google Forms → Send → Embed icon (＜＞) → copy the src URL</div>
+    </div>
+  </div>
+  <button class="btn btn-red" onclick="saveSurvey()">💾 Save Survey</button>
+</div>
+
+<!-- COMMUNITY -->
+<div class="panel" id="p-community">
+  <div class="ph"><h1>Community Page</h1><p>Edit the coming soon section.</p></div>
+  <div class="card">
+    <div class="row2">
+      <div class="f"><label>Small Label</label><input id="cm-label"/></div>
+      <div class="f"><label>Page Title</label><input id="cm-title"/></div>
+    </div>
+    <div class="f"><label>Subtitle</label><input id="cm-sub"/></div>
+    <div class="f"><label>Coming Soon Title</label><input id="cm-cs-title"/></div>
+    <div class="f"><label>Coming Soon Text</label><textarea id="cm-cs-text" rows="2"></textarea></div>
+    <div class="row2">
+      <div class="f"><label>Button Text</label><input id="cm-btn"/></div>
+      <div class="f"><label>Button Links To</label><select id="cm-btarget"><option value="contact">Contact</option><option value="donate">Donate</option></select></div>
+    </div>
+  </div>
+  <button class="btn btn-red" onclick="saveCommunity()">💾 Save Community Page</button>
+</div>
+
+<!-- CONTACT -->
+<div class="panel" id="p-contact">
+  <div class="ph"><h1>Contact Page</h1><p>Edit your contact information and form text.</p></div>
+  <div class="card">
+    <div class="row2">
+      <div class="f"><label>Small Label</label><input id="ct-label"/></div>
+      <div class="f"><label>Page Title</label><input id="ct-title"/></div>
+    </div>
+    <div class="f"><label>Intro Title</label><input id="ct-ititle"/></div>
+    <div class="f"><label>Intro Text</label><textarea id="ct-itext" rows="2"></textarea></div>
+    <div class="row2">
+      <div class="f"><label>Email Address</label><input id="ct-email"/></div>
+      <div class="f"><label>Location</label><input id="ct-loc"/></div>
+    </div>
+    <div class="row2">
+      <div class="f"><label>Workshop Availability</label><input id="ct-ws"/></div>
+      <div class="f"><label>Form Title</label><input id="ct-ftitle"/></div>
+    </div>
+  </div>
+  <button class="btn btn-red" onclick="saveContact()">💾 Save Contact Page</button>
+</div>
+
+<!-- DONATE -->
+<div class="panel" id="p-donate">
+  <div class="ph"><h1>Donate Page</h1><p>Edit donation tiers and payment info.</p></div>
+  <div class="card">
+    <div class="row2">
+      <div class="f"><label>Small Label</label><input id="dn-label"/></div>
+      <div class="f"><label>Page Title</label><input id="dn-title"/></div>
+    </div>
+    <div class="f"><label>Subtitle</label><input id="dn-sub"/></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">Donation Tiers</div>
+    <div id="donate-tiers-editor"></div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:.75rem" onclick="addDonateTier()">＋ Add Tier</button>
+  </div>
+  <div class="card">
+    <div class="f"><label>Donation Button URL (PayPal, Venmo, etc.)</label><input id="dn-url" placeholder="Leave blank to show email instead"/></div>
+    <div class="f"><label>Text shown if no URL set</label><input id="dn-msg"/></div>
+    <div class="f"><label>Disclaimer Note</label><textarea id="dn-note" rows="2"></textarea></div>
+  </div>
+  <button class="btn btn-red" onclick="saveDonate()">💾 Save Donate Page</button>
+</div>
+
+<!-- ACCOUNT -->
+<div class="panel" id="p-account">
+  <div class="ph"><h1>Change Password</h1></div>
+  <div class="card">
+    <div class="f"><label>New Password</label><input type="password" id="np"/></div>
+    <div class="f"><label>Confirm New Password</label><input type="password" id="cp"/></div>
+    <button class="btn btn-red" onclick="changePw()">Update Password</button>
+  </div>
+</div>
+
+<!-- DATA -->
+<div class="panel" id="p-data">
+  <div class="ph"><h1>Backup & Data</h1></div>
+  <div class="card">
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:1rem">Export all your site content as a backup file you can keep safe.</p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+      <button class="btn btn-dark btn-sm" onclick="exportData()">📥 Export Backup</button>
+      <button class="btn btn-ghost btn-sm" onclick="importTrigger()">📤 Import Backup</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)"/>
+      <button class="btn btn-danger btn-sm" onclick="resetData()">🗑 Reset Everything</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /wrap -->
+</div><!-- /admin -->
+
+<!-- SAVE TOAST -->
+<div id="toast">✓ Saved!</div>
+
+<!-- IMPACT MODAL -->
+<div class="mbg" id="imp-modal">
+  <div class="modal">
+    <div class="mhd"><h2 id="imp-modal-title">Add Impact Story</h2><button class="mclose" onclick="closeM('imp-modal')">×</button></div>
+    <div class="row2"><div class="f"><label>Organization</label><input id="im-org"/></div><div class="f"><label>Date</label><input id="im-date" placeholder="February 2026"/></div></div>
+    <div class="f"><label>Story</label><textarea id="im-story" rows="5"></textarea></div>
+    <div class="f"><label>Photo (optional)</label>
+      <div class="img-area" onclick="trigUpload('im-img')"><input type="file" id="im-img" accept="image/*" onchange="handleImgModal(this,'im-prev')"/><p>📸 Click to upload</p><img class="img-prev" id="im-prev"/></div>
+    </div>
+    <div class="mft"><button class="btn btn-ghost" onclick="closeM('imp-modal')">Cancel</button><button class="btn btn-red" onclick="saveImpactItem()">Save Story</button></div>
+  </div>
+</div>
+
+<!-- PARTNER MODAL -->
+<div class="mbg" id="pt-modal">
+  <div class="modal">
+    <div class="mhd"><h2 id="pt-modal-title">Add Partner</h2><button class="mclose" onclick="closeM('pt-modal')">×</button></div>
+    <div class="row2"><div class="f"><label>Partner Name</label><input id="pm-name"/></div><div class="f"><label>Emoji Icon</label><input id="pm-emoji" maxlength="4" placeholder="⚖️"/></div></div>
+    <div class="f"><label>Description</label><textarea id="pm-desc" rows="3"></textarea></div>
+    <div class="f"><label>Website URL</label><input id="pm-url" placeholder="https://..."/></div>
+    <div class="f"><label>Logo (optional)</label>
+      <div class="img-area" onclick="trigUpload('pm-img')"><input type="file" id="pm-img" accept="image/*" onchange="handleImgModal(this,'pm-prev')"/><p>📸 Click to upload logo</p><img class="img-prev" id="pm-prev"/></div>
+    </div>
+    <div class="mft"><button class="btn btn-ghost" onclick="closeM('pt-modal')">Cancel</button><button class="btn btn-red" onclick="savePartnerItem()">Save Partner</button></div>
+  </div>
+</div>
+
+<!-- CUSTOM PAGE MODAL -->
+<div class="mbg" id="cp-modal">
+  <div class="modal">
+    <div class="mhd"><h2 id="cp-modal-title">Add Custom Page</h2><button class="mclose" onclick="closeM('cp-modal')">×</button></div>
+    <div class="row2"><div class="f"><label>Page Name (in nav)</label><input id="cp-label" placeholder="About"/></div><div class="f"><label>Page ID (no spaces)</label><input id="cp-id" placeholder="about"/></div></div>
+    <div class="f"><label>Subtitle (optional)</label><input id="cp-subtitle"/></div>
+    <div class="f"><label>Page Content (HTML allowed)</label><textarea id="cp-content" rows="8" placeholder="&lt;p&gt;Write your content here...&lt;/p&gt;&#10;&lt;p&gt;You can use basic HTML tags.&lt;/p&gt;"></textarea></div>
+    <div class="mft"><button class="btn btn-ghost" onclick="closeM('cp-modal')">Cancel</button><button class="btn btn-red" onclick="saveCustomPage()">Save Page</button></div>
+  </div>
+</div>
+
+<script>
+// ── AUTH ──
+function getPw(){return localStorage.getItem('rr_pw')||'risingred2026';}
+function login(){const v=document.getElementById('pw').value;if(v===getPw()){document.getElementById('ls').style.display='none';document.getElementById('as').style.display='block';loadAll();}else{document.getElementById('le').style.display='block';}}
+function logout(){document.getElementById('ls').style.display='flex';document.getElementById('as').style.display='none';document.getElementById('pw').value='';}
+function changePw(){const np=document.getElementById('np').value.trim(),cp=document.getElementById('cp').value.trim();if(!np||np.length<6){alert('Password must be at least 6 characters.');return;}if(np!==cp){alert("Passwords don't match.");return;}localStorage.setItem('rr_pw',np);document.getElementById('np').value='';document.getElementById('cp').value='';alert('✓ Password changed! Use your new password next time you log in.');toast();}
+
+// ── DATA ──
+const DEF={theme:{accent:'#c0392b',accentLight:'#e8564a',accentPale:'#fdf0ee',bg:'#faf7f4',dark:'#1a1008',mid:'#5c3d2e',fontDisplay:'Cormorant Garamond',fontBody:'DM Sans'},site:{brand:'Rising Red',footerCopy:'© 2026 Rising Red · Orange County, CA · rising.red14@gmail.com',contactEmail:'rising.red14@gmail.com'},pages:[{id:'home',label:'Home',type:'home',visible:true},{id:'workshops',label:'Workshops',type:'workshops',visible:true},{id:'impact',label:'Impact',type:'impact',visible:true},{id:'partners',label:'Partners',type:'partners',visible:true},{id:'team',label:'Team',type:'team',visible:true},{id:'survey',label:'Feedback',type:'survey',visible:true},{id:'community',label:'Community',type:'community',visible:true},{id:'contact',label:'Contact',type:'contact',visible:true},{id:'donate',label:'Donate',type:'donate',visible:true,isDonate:true}],home:{heroLabel:'Youth-Led Social Movement',heroHeadline:'Your cycle is your',heroHeadlineEm:'strength.',heroSub:"Rising Red is redefining how girls and women understand their bodies — empowering every phase of the menstrual cycle as a source of confidence, creativity, and leadership.",heroBtn1:'Our Workshops',heroBtn1Target:'workshops',heroBtn2:'Support Us',heroBtn2Target:'donate',heroImg:'',badgeNum:'30+',badgeText:'Girls & Women Reached',stats:[{num:'30+',label:'Lives Impacted'},{num:'5+',label:'Workshops Completed'},{num:'3',label:'Community Partners'},{num:'1',label:'Fearless Founder'}],storyLabel:'Our Story',storyTitle:'More than a period. A source of power.',storyP1:"Rising Red started with a simple realization: girls are taught what a period is, but not what it reveals about who they are.",storyP2:"Rising Red exists to make that strength visible. In classrooms, shelters, and community spaces, we don't just talk about biology — we talk about identity, confidence, and what it means to rise.",storyP3:"We are the only organization centering workshops entirely on discovering the strengths of each phase of the menstrual cycle.",storyCards:[{icon:'🌱',title:'Menstruation',text:'Understanding each phase as a source of unique strengths.'},{icon:'🌊',title:'Body Literacy',text:'Building self-trust and confidence through real knowledge.'},{icon:'✨',title:'Menopause',text:'Reframing transition as clarity, wisdom, and purpose.'},{icon:'💪',title:'All Genders',text:'Helping everyone become informed, compassionate allies.'}]},workshops:{pageLabel:'What We Offer',pageTitle:'Our Workshops',pageSub:'Interactive sessions that create judgment-free spaces where participants build self-trust, confidence, and body literacy.',ctaTitle:'Bring a Workshop to Your Community',ctaSub:'We visit schools, shelters, and organizations. All workshops are free or low-cost.',ctaBtn:'Get in Touch',ctaBtnTarget:'contact',items:[{tag:'Ages 12+',title:'Menstruation',desc:'Designed for young female teenagers who want to understand their cycle as more than just a period.',bullets:['Explore each phase and its unique strengths','Focus, creativity, confidence, and planning','Learn to work with your cycle, not against it','Build self-trust in a judgment-free space'],img:''},{tag:'All Ages',title:'M + M',desc:'Combines menstrual cycle and menopause into one empowering experience.',bullets:['Energy, focus, creativity across life stages','Encourages self-reflection and self-advocacy','Normalizes hormonal changes at every age','Open conversation and genuine connection'],img:''},{tag:'Women 40+',title:'Menopause',desc:'Reframes perimenopause, menopause, and post-menopause as powerful stages of growth.',bullets:['Emotional clarity, resilience, and confidence','Tools to navigate healthcare confidently','Psychological consistency and freedom','Celebrates this powerful life transition'],img:''}]},impact:{pageLabel:'Our Reach',pageTitle:'Impact',pageSub:'Every site represents real conversations, lasting learning, and meaningful change.',items:[{org:"Grandma's House of Hope",date:'February 2026',story:'Our very first M+M workshop with older women. Five women shared their stories with honesty and courage — bringing us to tears. Each woman expressed feeling newly empowered, many for the first time.',img:''},{org:"Grandma's House of Hope",date:'February 2026',story:'We returned to a second shelter with 10 participants. Women shared reflections, asked thoughtful questions, and engaged deeply.',img:''},{org:"Grandma's House of Hope",date:'February 2026',story:'A third M+M session with five older women. Their openness and courage were truly inspiring.',img:''},{org:'Project S.A.Y. Teen Center',date:'February 2026',story:'A youth-to-youth workshop with seven teens in an open, relatable space.',img:''},{org:"Colette's Children's Home",date:'March 12, 2026',story:'A meaningful workshop with six women who shared stories of overcoming homelessness.',img:''}]},partners:{pageLabel:'Collaborations',pageTitle:'Our Partners',pageSub:'Together, we create greater impact.',items:[{name:'Balance Her',desc:"We love partnering with Balance Her to help girls work with their cycles. Their cycle-tracking boards come into our workshops with 10% off promo codes.",url:'https://thebalanceher.com',emoji:'⚖️',img:''}]},team:{pageLabel:'The People Behind Rising Red',pageTitle:'Meet the Team',founderImg:'',founderName:'Arya Bhavsar',founderRole:'Founder & Workshop Leader',founderBio1:"Arya Bhavsar is a South Asian high school student in Orange County, class of 2029, and the founder of Rising Red.",founderBio2:"She started Rising Red as a freshman at just 14 years old and personally leads all of its workshops.",founderBio3:"Arya is deeply passionate about women's empowerment. Her drive, creativity, and compassion make her a true force for positive impact.",joinTitle:'Join the Team!',joinText:"Rising Red is always looking for passionate volunteers. Whether it's workshops, outreach, social media, or creative projects — there's a place for you here.",joinBtn:'Get Involved',joinBtnTarget:'contact'},survey:{pageLabel:'Anonymous Feedback',pageTitle:'Share Your Voice',pageSub:'Your anonymous feedback helps us improve every workshop. No names required.',formIntro:'This form is completely anonymous.',googleFormUrl:''},community:{pageLabel:'Girls Supporting Girls',pageTitle:'Community',pageSub:'A safe space where girls can support each other and rise together.',comingTitle:'The Rising Red Community Chat',comingText:"We're building a safe, moderated space where girls and women can connect and support each other. Coming soon!",comingBtn:'Notify Me',comingBtnTarget:'contact'},contact:{pageLabel:'Reach Out',pageTitle:'Contact Us',introTitle:"Let's connect.",introText:'Whether you want to bring a workshop to your community, partner with us, volunteer, or just say hello — we\'d love to hear from you.',email:'rising.red14@gmail.com',location:'Orange County, California',workshopAvail:'In Person & Online',formTitle:'Send a Message'},donate:{pageLabel:'Support the Mission',pageTitle:'Donate to Rising Red',pageSub:'Every contribution helps us reach more girls and run more workshops.',tiers:[{amount:'$10',desc:'Provides materials for one workshop participant'},{amount:'$25',desc:'Helps fund supplies for a full workshop session'},{amount:'$50',desc:'Sponsors an entire workshop at a school or shelter'}],donateUrl:'',donateMsg:'To donate, reach out directly at rising.red14@gmail.com',note:'Rising Red is a youth-led initiative working toward official nonprofit status. Donations are not yet tax-deductible.'},customPages:[]};
+
+let _cachedData = null;
+function getData(){return _cachedData ? JSON.parse(JSON.stringify(_cachedData)) : JSON.parse(JSON.stringify(DEF));}
+function dmerge(d,s){const o=JSON.parse(JSON.stringify(d));for(const k in s){if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&s[k]!==null){o[k]=dmerge(d[k]||{},s[k]);}else{o[k]=s[k];}}return o;}
+async function saveData(d){
+  _cachedData = d;
+  const pw = localStorage.getItem('rr_pw') || 'risingred2026';
+  try {
+    const res = await fetch('/.netlify/functions/save-data', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({password: pw, data: d})
+    });
+    const result = await res.json();
+    if (!res.ok || result.error) {
+      alert('Save failed: ' + (result.error || 'Unknown error'));
+      return;
+    }
+    toast();
+  } catch(err) {
+    alert('Save failed. Check your internet connection.');
+  }
+}
+function toast(){const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+async function loadFromServer(){
+  try {
+    const res = await fetch('/.netlify/functions/get-data');
+    if (res.ok) {
+      const saved = await res.json();
+      if (saved && Object.keys(saved).length > 0) {
+        _cachedData = dmerge(DEF, saved);
+      } else {
+        _cachedData = JSON.parse(JSON.stringify(DEF));
+      }
+    }
+  } catch(e) {
+    _cachedData = JSON.parse(JSON.stringify(DEF));
+  }
+}
+function gv(id){const el=document.getElementById(id);return el?el.value:'';}
+function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
+
+// ── PANELS ──
+function sp(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));const p=document.getElementById('p-'+id);if(p)p.classList.add('active');event.currentTarget.classList.add('active');if(id==='impact')renderImpactList();if(id==='partners')renderPartnersList();if(id==='workshops')renderWorkshopsEditor();if(id==='pages')renderPagesManager();if(id==='donate')renderDonateTiers();if(id==='home')renderStoryCards();}
+
+// ── DESIGN ──
+const PRESETS={red:{accent:'#c0392b',accentLight:'#e8564a',accentPale:'#fdf0ee',bg:'#faf7f4',dark:'#1a1008',mid:'#5c3d2e'},navy:{accent:'#1a3a6b',accentLight:'#2c5fb3',accentPale:'#eef2fb',bg:'#f7f8fc',dark:'#0d1f3c',mid:'#2d4a7a'},emerald:{accent:'#1a7a4a',accentLight:'#24a866',accentPale:'#edfaf3',bg:'#f5fbf7',dark:'#0d3d22',mid:'#2a6b42'},purple:{accent:'#7b2d8b',accentLight:'#a040b5',accentPale:'#f8edfb',bg:'#faf7fc',dark:'#3a1145',mid:'#6b2d7a'},gold:{accent:'#b8860b',accentLight:'#d4a017',accentPale:'#fdf8e8',bg:'#faf9f4',dark:'#3d2c00',mid:'#7a5c0a'}};
+function setPreset(name){const p=PRESETS[name];if(!p)return;sv('c-accent',p.accent);sv('c-accent-light',p.accentLight);sv('c-accent-pale',p.accentPale);sv('c-bg',p.bg);sv('c-dark',p.dark);sv('c-mid',p.mid);}
+function previewColor(){}
+function updateFontPreview(){const df=gv('font-display'),bf=gv('font-body');document.getElementById('font-display-preview').style.fontFamily=`'${df}',serif`;document.getElementById('font-body-preview').style.fontFamily=`'${bf}',sans-serif`;}
+function saveDesign(){const d=getData();d.theme={accent:gv('c-accent'),accentLight:gv('c-accent-light'),accentPale:gv('c-accent-pale'),bg:gv('c-bg'),dark:gv('c-dark'),mid:gv('c-mid'),fontDisplay:gv('font-display'),fontBody:gv('font-body')};saveData(d);}
+function loadDesign(d){const t=d.theme;sv('c-accent',t.accent);sv('c-accent-light',t.accentLight);sv('c-accent-pale',t.accentPale);sv('c-bg',t.bg);sv('c-dark',t.dark);sv('c-mid',t.mid||'#5c3d2e');sv('font-display',t.fontDisplay);sv('font-body',t.fontBody);updateFontPreview();}
+
+// ── SITE SETTINGS ──
+function saveSite(){const d=getData();d.site={brand:gv('s-brand'),footerCopy:gv('s-footer'),contactEmail:gv('s-email')};saveData(d);}
+function loadSite(d){sv('s-brand',d.site.brand);sv('s-footer',d.site.footerCopy);sv('s-email',d.site.contactEmail);}
+
+// ── PAGES MANAGER ──
+function renderPagesManager(){const d=getData();const bl=document.getElementById('builtin-pages-list');bl.innerHTML='';d.pages.forEach((pg,i)=>{bl.innerHTML+=`<div class="page-row"><span class="page-drag">⠿</span><div class="page-info"><strong>${pg.label}</strong><span>${pg.type} page</span></div><span class="page-badge">${pg.type}</span><label class="toggle"><input type="checkbox" id="pg-vis-${pg.id}" ${pg.visible!==false?'checked':''}><span class="slider"></span></label><div style="display:flex;gap:.4rem"><button class="btn btn-ghost btn-sm" onclick="renamePage('${pg.id}')">Rename</button></div></div>`;});const cl=document.getElementById('custom-pages-list');cl.innerHTML='';(d.customPages||[]).forEach((pg,i)=>{cl.innerHTML+=`<div class="page-row"><div class="page-info"><strong>${pg.label}</strong><span>custom page · /${pg.id}</span></div><div style="display:flex;gap:.4rem"><button class="btn btn-ghost btn-sm" onclick="openCustomPageModal(${i})">Edit</button><button class="btn btn-danger btn-sm" onclick="deleteCustomPage(${i})">Delete</button></div></div>`;});if(!(d.customPages||[]).length)cl.innerHTML='<p style="color:var(--muted);font-size:.85rem">No custom pages yet.</p>';}
+function savePages(){const d=getData();d.pages.forEach(pg=>{const el=document.getElementById('pg-vis-'+pg.id);if(el)pg.visible=el.checked;});saveData(d);}
+function renamePage(id){const d=getData();const pg=d.pages.find(p=>p.id===id);if(!pg)return;const nl=prompt(`Rename "${pg.label}" nav label to:`,pg.label);if(nl&&nl.trim()){pg.label=nl.trim();saveData(d);renderPagesManager();}}
+
+// ── CUSTOM PAGES ──
+let editCpIdx=-1;
+function openCustomPageModal(idx){editCpIdx=idx;const d=getData();document.getElementById('cp-modal-title').textContent=idx===-1?'Add Custom Page':'Edit Custom Page';const pg=idx===-1?{label:'',id:'',subtitle:'',content:''}:(d.customPages||[])[idx]||{};sv('cp-label',pg.label);sv('cp-id',pg.id);sv('cp-subtitle',pg.subtitle);sv('cp-content',pg.content);document.getElementById('cp-modal').classList.add('open');}
+function saveCustomPage(){const d=getData();if(!d.customPages)d.customPages=[];const label=gv('cp-label').trim(),id=gv('cp-id').trim().replace(/\s+/g,'-').toLowerCase();if(!label||!id){alert('Page name and ID are required.');return;}const pg={id,label,type:'custom',visible:true,subtitle:gv('cp-subtitle'),content:gv('cp-content')};if(editCpIdx===-1)d.customPages.push(pg);else d.customPages[editCpIdx]=pg;saveData(d);closeM('cp-modal');renderPagesManager();}
+function deleteCustomPage(idx){if(!confirm('Delete this page?'))return;const d=getData();d.customPages.splice(idx,1);saveData(d);renderPagesManager();}
+
+// ── HOME ──
+function renderStoryCards(){const d=getData();const c=document.getElementById('story-cards-editor');c.innerHTML=(d.home.storyCards||[]).map((sc,i)=>`<div class="card" style="margin-bottom:.75rem"><div class="card-hd">Card ${i+1}</div><div class="row3"><div class="f"><label>Emoji Icon</label><input id="sc-icon-${i}" value="${sc.icon}"/></div><div class="f"><label>Title</label><input id="sc-title-${i}" value="${sc.title}"/></div><div class="f"><label>Text</label><input id="sc-text-${i}" value="${sc.text}"/></div></div></div>`).join('');}
+function saveHome(){const d=getData();const h=d.home;h.heroLabel=gv('h-label');h.heroHeadline=gv('h-headline');h.heroHeadlineEm=gv('h-em');h.heroSub=gv('h-sub');h.heroBtn1=gv('h-btn1');h.heroBtn1Target=gv('h-btn1t');h.heroBtn2=gv('h-btn2');h.heroBtn2Target=gv('h-btn2t');h.badgeNum=gv('h-bnum');h.badgeText=gv('h-btxt');h.storyLabel=gv('h-slabel');h.storyTitle=gv('h-stitle');h.storyP1=gv('h-sp1');h.storyP2=gv('h-sp2');h.storyP3=gv('h-sp3');h.stats=Array.from({length:4},(_,i)=>({num:gv('stn-'+i),label:gv('stl-'+i)}));h.storyCards=(h.storyCards||[]).map((_,i)=>({icon:gv('sc-icon-'+i),title:gv('sc-title-'+i),text:gv('sc-text-'+i)}));saveData(d);}
+function loadHome(d){const h=d.home;sv('h-label',h.heroLabel);sv('h-headline',h.heroHeadline);sv('h-em',h.heroHeadlineEm);sv('h-sub',h.heroSub);sv('h-btn1',h.heroBtn1);sv('h-btn1t',h.heroBtn1Target);sv('h-btn2',h.heroBtn2);sv('h-btn2t',h.heroBtn2Target);sv('h-bnum',h.badgeNum);sv('h-btxt',h.badgeText);sv('h-slabel',h.storyLabel);sv('h-stitle',h.storyTitle);sv('h-sp1',h.storyP1);sv('h-sp2',h.storyP2);sv('h-sp3',h.storyP3);if(h.heroImg)showPrev('hero-img-prev',h.heroImg);const se=document.getElementById('stats-edit');se.innerHTML=(h.stats||[]).map((s,i)=>`<div class="stat-ec"><label>Stat ${i+1} Number</label><input id="stn-${i}" value="${s.num}"/></div><div class="stat-ec"><label>Stat ${i+1} Label</label><input id="stl-${i}" value="${s.label}"/></div>`).join('');}
+
+// ── WORKSHOPS ──
+function renderWorkshopsEditor(){const d=getData();const c=document.getElementById('workshops-editor');sv('wk-label',d.workshops.pageLabel);sv('wk-title',d.workshops.pageTitle);sv('wk-sub',d.workshops.pageSub);sv('wk-cta-title',d.workshops.ctaTitle);sv('wk-cta-sub',d.workshops.ctaSub);sv('wk-cta-btn',d.workshops.ctaBtn);sv('wk-cta-target',d.workshops.ctaBtnTarget);c.innerHTML=d.workshops.items.map((w,i)=>`<div class="card" style="margin-bottom:.75rem"><div class="card-hd">Workshop ${i+1}<button class="btn btn-danger btn-sm" onclick="deleteWorkshop(${i})" style="margin-left:auto">Delete</button></div><div class="row3"><div class="f"><label>Title</label><input id="wt-${i}" value="${w.title}"/></div><div class="f"><label>Age Tag</label><input id="wtag-${i}" value="${w.tag}"/></div><div class="f"><label>Photo</label><div class="img-area" onclick="trigUpload('wi-${i}')"><input type="file" id="wi-${i}" accept="image/*" onchange="handleWsImg(this,${i})"/><p>${w.img?'✓ Photo set':'📸 Upload'}</p></div></div></div><div class="f"><label>Description</label><textarea id="wd-${i}" rows="2">${w.desc}</textarea></div><div class="f"><label>Bullet Points</label><div class="bullet-list" id="bl-${i}">${w.bullets.map((b,bi)=>`<div class="bullet-row"><input id="b-${i}-${bi}" value="${b}"/><button class="del-bullet" onclick="delBullet(${i},${bi})">×</button></div>`).join('')}</div><button class="btn btn-ghost btn-sm" onclick="addBullet(${i})">＋ Add bullet</button></div></div>`).join('');}
+function addWorkshop(){const d=getData();d.workshops.items.push({tag:'All Ages',title:'New Workshop',desc:'Description here.',bullets:['Bullet point'],img:''});saveData(d);renderWorkshopsEditor();}
+function deleteWorkshop(i){if(!confirm('Delete this workshop?'))return;const d=getData();d.workshops.items.splice(i,1);saveData(d);renderWorkshopsEditor();}
+function addBullet(wi){const d=getData();d.workshops.items[wi].bullets.push('New bullet');saveData(d);renderWorkshopsEditor();}
+function delBullet(wi,bi){const d=getData();d.workshops.items[wi].bullets.splice(bi,1);saveData(d);renderWorkshopsEditor();}
+function handleWsImg(input,idx){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{const d=getData();d.workshops.items[idx].img=e.target.result;saveData(d);renderWorkshopsEditor();};r.readAsDataURL(f);}
+function saveWorkshops(){const d=getData();d.workshops.pageLabel=gv('wk-label');d.workshops.pageTitle=gv('wk-title');d.workshops.pageSub=gv('wk-sub');d.workshops.ctaTitle=gv('wk-cta-title');d.workshops.ctaSub=gv('wk-cta-sub');d.workshops.ctaBtn=gv('wk-cta-btn');d.workshops.ctaBtnTarget=gv('wk-cta-target');d.workshops.items=d.workshops.items.map((_,i)=>({title:gv('wt-'+i),tag:gv('wtag-'+i),desc:gv('wd-'+i),bullets:Array.from(document.querySelectorAll(`[id^="b-${i}-"]`)).map(el=>el.value).filter(b=>b),img:_.img}));saveData(d);}
+
+// ── IMPACT ──
+let editImpIdx=-1;
+function renderImpactList(){const d=getData();sv('imp-label',d.impact.pageLabel);sv('imp-title',d.impact.pageTitle);sv('imp-sub',d.impact.pageSub);const l=document.getElementById('impact-list');l.innerHTML=d.impact.items.map((it,i)=>`<div class="item-row"><div class="item-thumb">${it.img?`<img src="${it.img}"/>`:'📍'}</div><div class="item-info"><strong>${it.org}</strong><span>${it.date}</span></div><div class="item-acts"><button class="btn btn-ghost btn-sm" onclick="openImpactModal(${i})">Edit</button><button class="btn btn-danger btn-sm" onclick="delImpact(${i})">Del</button></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem">No stories yet.</p>';}
+function openImpactModal(idx){editImpIdx=idx;const d=getData();document.getElementById('imp-modal-title').textContent=idx===-1?'Add Impact Story':'Edit Impact Story';const it=idx===-1?{org:'',date:'',story:'',img:''}:d.impact.items[idx];sv('im-org',it.org);sv('im-date',it.date);sv('im-story',it.story);const p=document.getElementById('im-prev');if(it.img){p.src=it.img;p.style.display='block';}else p.style.display='none';document.getElementById('imp-modal').classList.add('open');}
+function saveImpactItem(){const d=getData();const p=document.getElementById('im-prev');const it={org:gv('im-org'),date:gv('im-date'),story:gv('im-story'),img:p.style.display!=='none'?p.src:''};if(editImpIdx===-1)d.impact.items.push(it);else d.impact.items[editImpIdx]=it;saveData(d);closeM('imp-modal');renderImpactList();}
+function delImpact(i){if(!confirm('Delete?'))return;const d=getData();d.impact.items.splice(i,1);saveData(d);renderImpactList();}
+function saveImpactHeader(){const d=getData();d.impact.pageLabel=gv('imp-label');d.impact.pageTitle=gv('imp-title');d.impact.pageSub=gv('imp-sub');saveData(d);}
+
+// ── PARTNERS ──
+let editPtIdx=-1;
+function renderPartnersList(){const d=getData();sv('pt-label',d.partners.pageLabel);sv('pt-title',d.partners.pageTitle);sv('pt-sub',d.partners.pageSub);const l=document.getElementById('partners-list');l.innerHTML=d.partners.items.map((pt,i)=>`<div class="item-row"><div class="item-thumb">${pt.img?`<img src="${pt.img}"/>`:(pt.emoji||'🤝')}</div><div class="item-info"><strong>${pt.name}</strong><span>${pt.url||''}</span></div><div class="item-acts"><button class="btn btn-ghost btn-sm" onclick="openPartnerModal(${i})">Edit</button><button class="btn btn-danger btn-sm" onclick="delPartner(${i})">Del</button></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem">No partners yet.</p>';}
+function openPartnerModal(idx){editPtIdx=idx;const d=getData();document.getElementById('pt-modal-title').textContent=idx===-1?'Add Partner':'Edit Partner';const pt=idx===-1?{name:'',desc:'',url:'',emoji:'',img:''}:d.partners.items[idx];sv('pm-name',pt.name);sv('pm-emoji',pt.emoji);sv('pm-desc',pt.desc);sv('pm-url',pt.url);const p=document.getElementById('pm-prev');if(pt.img){p.src=pt.img;p.style.display='block';}else p.style.display='none';document.getElementById('pt-modal').classList.add('open');}
+function savePartnerItem(){const d=getData();const p=document.getElementById('pm-prev');const pt={name:gv('pm-name'),emoji:gv('pm-emoji'),desc:gv('pm-desc'),url:gv('pm-url'),img:p.style.display!=='none'?p.src:''};if(editPtIdx===-1)d.partners.items.push(pt);else d.partners.items[editPtIdx]=pt;saveData(d);closeM('pt-modal');renderPartnersList();}
+function delPartner(i){if(!confirm('Delete?'))return;const d=getData();d.partners.items.splice(i,1);saveData(d);renderPartnersList();}
+function savePartnersHeader(){const d=getData();d.partners.pageLabel=gv('pt-label');d.partners.pageTitle=gv('pt-title');d.partners.pageSub=gv('pt-sub');saveData(d);}
+
+// ── TEAM ──
+function saveTeam(){const d=getData();d.team={pageLabel:gv('tm-label'),pageTitle:gv('tm-title'),founderImg:d.team.founderImg,founderName:gv('tm-name'),founderRole:gv('tm-role'),founderBio1:gv('tm-bio1'),founderBio2:gv('tm-bio2'),founderBio3:gv('tm-bio3'),joinTitle:gv('tm-jtitle'),joinText:gv('tm-jtext'),joinBtn:gv('tm-jbtn'),joinBtnTarget:gv('tm-jbtarget')};saveData(d);}
+function loadTeam(d){const t=d.team;sv('tm-label',t.pageLabel);sv('tm-title',t.pageTitle);sv('tm-name',t.founderName);sv('tm-role',t.founderRole);sv('tm-bio1',t.founderBio1);sv('tm-bio2',t.founderBio2);sv('tm-bio3',t.founderBio3);sv('tm-jtitle',t.joinTitle);sv('tm-jtext',t.joinText);sv('tm-jbtn',t.joinBtn);sv('tm-jbtarget',t.joinBtnTarget);if(t.founderImg)showPrev('founder-img-prev',t.founderImg);}
+
+// ── SURVEY ──
+function saveSurvey(){const d=getData();d.survey={pageLabel:gv('sv-label'),pageTitle:gv('sv-title'),pageSub:gv('sv-sub'),formIntro:gv('sv-intro'),googleFormUrl:gv('sv-url')};saveData(d);}
+function loadSurvey(d){sv('sv-label',d.survey.pageLabel);sv('sv-title',d.survey.pageTitle);sv('sv-sub',d.survey.pageSub);sv('sv-intro',d.survey.formIntro);sv('sv-url',d.survey.googleFormUrl);}
+
+// ── COMMUNITY ──
+function saveCommunity(){const d=getData();d.community={pageLabel:gv('cm-label'),pageTitle:gv('cm-title'),pageSub:gv('cm-sub'),comingTitle:gv('cm-cs-title'),comingText:gv('cm-cs-text'),comingBtn:gv('cm-btn'),comingBtnTarget:gv('cm-btarget')};saveData(d);}
+function loadCommunity(d){sv('cm-label',d.community.pageLabel);sv('cm-title',d.community.pageTitle);sv('cm-sub',d.community.pageSub);sv('cm-cs-title',d.community.comingTitle);sv('cm-cs-text',d.community.comingText);sv('cm-btn',d.community.comingBtn);sv('cm-btarget',d.community.comingBtnTarget);}
+
+// ── CONTACT ──
+function saveContact(){const d=getData();d.contact={pageLabel:gv('ct-label'),pageTitle:gv('ct-title'),introTitle:gv('ct-ititle'),introText:gv('ct-itext'),email:gv('ct-email'),location:gv('ct-loc'),workshopAvail:gv('ct-ws'),formTitle:gv('ct-ftitle')};saveData(d);}
+function loadContact(d){sv('ct-label',d.contact.pageLabel);sv('ct-title',d.contact.pageTitle);sv('ct-ititle',d.contact.introTitle);sv('ct-itext',d.contact.introText);sv('ct-email',d.contact.email);sv('ct-loc',d.contact.location);sv('ct-ws',d.contact.workshopAvail);sv('ct-ftitle',d.contact.formTitle);}
+
+// ── DONATE ──
+function renderDonateTiers(){const d=getData();sv('dn-label',d.donate.pageLabel);sv('dn-title',d.donate.pageTitle);sv('dn-sub',d.donate.pageSub);sv('dn-url',d.donate.donateUrl);sv('dn-msg',d.donate.donateMsg);sv('dn-note',d.donate.note);const c=document.getElementById('donate-tiers-editor');c.innerHTML=d.donate.tiers.map((t,i)=>`<div class="card" style="margin-bottom:.65rem"><div class="card-hd">Tier ${i+1}<button class="btn btn-danger btn-sm" onclick="delDonateTier(${i})" style="margin-left:auto">Delete</button></div><div class="row2"><div class="f"><label>Amount</label><input id="dt-amt-${i}" value="${t.amount}"/></div><div class="f"><label>Description</label><input id="dt-desc-${i}" value="${t.desc}"/></div></div></div>`).join('');}
+function addDonateTier(){const d=getData();d.donate.tiers.push({amount:'$X',desc:'What this covers'});saveData(d);renderDonateTiers();}
+function delDonateTier(i){const d=getData();d.donate.tiers.splice(i,1);saveData(d);renderDonateTiers();}
+function saveDonate(){const d=getData();d.donate.pageLabel=gv('dn-label');d.donate.pageTitle=gv('dn-title');d.donate.pageSub=gv('dn-sub');d.donate.donateUrl=gv('dn-url');d.donate.donateMsg=gv('dn-msg');d.donate.note=gv('dn-note');d.donate.tiers=d.donate.tiers.map((_,i)=>({amount:gv('dt-amt-'+i),desc:gv('dt-desc-'+i)}));saveData(d);}
+
+// ── IMAGE UPLOAD ──
+function trigUpload(id){document.getElementById(id)?.click();}
+function handleImg(input,prevId,dataKey){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{showPrev(prevId,e.target.result);if(dataKey){const d=getData();if(dataKey==='heroImg')d.home.heroImg=e.target.result;else if(dataKey==='founderImg')d.team.founderImg=e.target.result;saveData(d);}};r.readAsDataURL(f);}
+function handleImgModal(input,prevId){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>showPrev(prevId,e.target.result);r.readAsDataURL(f);}
+function showPrev(id,src){const el=document.getElementById(id);if(el){el.src=src;el.style.display='block';}}
+
+// ── MODAL ──
+function closeM(id){document.getElementById(id)?.classList.remove('open');}
+
+// ── BACKUP ──
+function exportData(){const blob=new Blob([JSON.stringify(getData(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='risingred-backup.json';a.click();}
+function importTrigger(){document.getElementById('import-file').click();}
+function importData(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const d=JSON.parse(e.target.result);saveData(d);alert('✓ Backup imported!');setTimeout(loadAll,1000);}catch(err){alert('Error reading backup file.');}};r.readAsText(f);}
+function resetData(){if(!confirm('Reset ALL content to defaults? This cannot be undone.'))return;saveData(JSON.parse(JSON.stringify(DEF)));setTimeout(()=>{loadAll();toast();},1000);}
+
+// ── LOAD ALL ──
+async function loadAll(){await loadFromServer();const d=getData();loadDesign(d);loadSite(d);loadHome(d);loadTeam(d);loadSurvey(d);loadCommunity(d);loadContact(d);}
+</script>
+</body>
+</html>
