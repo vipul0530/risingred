@@ -635,7 +635,7 @@ function addWorkshop(){const d=getData();d.workshops.items.push({tag:'All Ages',
 function deleteWorkshop(i){if(!confirm('Delete this workshop?'))return;const d=getData();d.workshops.items.splice(i,1);saveData(d);renderWorkshopsEditor();}
 function addBullet(wi){const d=getData();d.workshops.items[wi].bullets.push('New bullet');saveData(d);renderWorkshopsEditor();}
 function delBullet(wi,bi){const d=getData();d.workshops.items[wi].bullets.splice(bi,1);saveData(d);renderWorkshopsEditor();}
-function handleWsImg(input,idx){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{const d=getData();d.workshops.items[idx].img=e.target.result;saveData(d);renderWorkshopsEditor();};r.readAsDataURL(f);}
+function handleWsImg(input,idx){handleWsImgCompressed(input,idx);}
 function saveWorkshops(){const d=getData();d.workshops.pageLabel=gv('wk-label');d.workshops.pageTitle=gv('wk-title');d.workshops.pageSub=gv('wk-sub');d.workshops.ctaTitle=gv('wk-cta-title');d.workshops.ctaSub=gv('wk-cta-sub');d.workshops.ctaBtn=gv('wk-cta-btn');d.workshops.ctaBtnTarget=gv('wk-cta-target');d.workshops.items=d.workshops.items.map((_,i)=>({title:gv('wt-'+i),tag:gv('wtag-'+i),desc:gv('wd-'+i),bullets:Array.from(document.querySelectorAll(`[id^="b-${i}-"]`)).map(el=>el.value).filter(b=>b),img:_.img}));saveData(d);}
 
 // ── IMPACT ──
@@ -676,10 +676,51 @@ function addDonateTier(){const d=getData();d.donate.tiers.push({amount:'$X',desc
 function delDonateTier(i){const d=getData();d.donate.tiers.splice(i,1);saveData(d);renderDonateTiers();}
 function saveDonate(){const d=getData();d.donate.pageLabel=gv('dn-label');d.donate.pageTitle=gv('dn-title');d.donate.pageSub=gv('dn-sub');d.donate.donateUrl=gv('dn-url');d.donate.donateMsg=gv('dn-msg');d.donate.note=gv('dn-note');d.donate.tiers=d.donate.tiers.map((_,i)=>({amount:gv('dt-amt-'+i),desc:gv('dt-desc-'+i)}));saveData(d);}
 
-// ── IMAGE UPLOAD ──
+// ── IMAGE UPLOAD (with compression) ──
 function trigUpload(id){document.getElementById(id)?.click();}
-function handleImg(input,prevId,dataKey){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{showPrev(prevId,e.target.result);if(dataKey){const d=getData();if(dataKey==='heroImg')d.home.heroImg=e.target.result;else if(dataKey==='founderImg')d.team.founderImg=e.target.result;saveData(d);}};r.readAsDataURL(f);}
-function handleImgModal(input,prevId){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>showPrev(prevId,e.target.result);r.readAsDataURL(f);}
+
+function compressImg(file, maxW, quality, cb) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleImg(input, prevId, dataKey) {
+  const f = input.files[0]; if (!f) return;
+  compressImg(f, 800, 0.7, compressed => {
+    showPrev(prevId, compressed);
+    if (dataKey) {
+      const d = getData();
+      if (dataKey === 'heroImg') d.home.heroImg = compressed;
+      else if (dataKey === 'founderImg') d.team.founderImg = compressed;
+      saveData(d);
+    }
+  });
+}
+
+function handleImgModal(input, prevId) {
+  const f = input.files[0]; if (!f) return;
+  compressImg(f, 600, 0.7, compressed => showPrev(prevId, compressed));
+}
+
+function handleWsImgCompressed(input, idx) {
+  const f = input.files[0]; if (!f) return;
+  compressImg(f, 600, 0.7, compressed => {
+    const d = getData(); d.workshops.items[idx].img = compressed; saveData(d); renderWorkshopsEditor();
+  });
+}
+
 function showPrev(id,src){const el=document.getElementById(id);if(el){el.src=src;el.style.display='block';}}
 
 // ── MODAL ──
