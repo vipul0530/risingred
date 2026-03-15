@@ -1,12 +1,9 @@
 const { getStore } = require("@netlify/blobs");
 
 exports.handler = async (event, context) => {
-  if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 200, body: "" };
-  }
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method not allowed" };
-  }
+  if (event.httpMethod === "OPTIONS") return { statusCode: 200, body: "" };
+  if (event.httpMethod !== "POST") return { statusCode: 405, body: "Method not allowed" };
+
   try {
     const { password, data } = JSON.parse(event.body);
     const correctPw = process.env.ADMIN_PASSWORD || "risingred2026";
@@ -17,7 +14,11 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({ error: "Incorrect password" })
       };
     }
-    const store = getStore("risingred");
+    const store = getStore({
+      name: "risingred",
+      siteID: process.env.NETLIFY_SITE_ID,
+      token: process.env.NETLIFY_AUTH_TOKEN
+    });
     await store.setJSON("sitedata", data);
     return {
       statusCode: 200,
