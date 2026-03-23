@@ -244,16 +244,21 @@ function rDonate(d){return`<section class="rr-sec"><div class="rr-con"><div clas
 function rCustom(pg){return`<div class="pg-hero"><h1 class="s-title">${pg.label}</h1>${pg.subtitle?`<p class="s-sub" style="margin:0 auto">${pg.subtitle}</p>`:''}</div><section class="rr-sec"><div class="rr-con cp-content">${pg.content||'<p>Page content goes here.</p>'}</div></section>`;}
 function submitContact(email){const n=document.getElementById('cf-name')?.value.trim(),e=document.getElementById('cf-email')?.value.trim(),m=document.getElementById('cf-msg')?.value.trim();if(!n||!e||!m){alert('Please fill in name, email, and message.');return;}window.location.href=`mailto:${email}?subject=${encodeURIComponent('Rising Red Website Contact')}&body=${encodeURIComponent(`Name: ${n}\nEmail: ${e}\n\n${m}`)}`;const ok=document.getElementById('cf-ok');if(ok)ok.style.display='block';}
 async function init(){
-  // Show site immediately with defaults while loading
+  // Use cached data immediately to avoid flash of placeholder
   let d = JSON.parse(JSON.stringify(DEF));
+  try {
+    const cached = localStorage.getItem('rr_data');
+    if (cached) { d = dmerge(DEF, JSON.parse(cached)); }
+  } catch(e) {}
   applyTheme(d.theme); buildNav(d); buildPages(d);
   document.title = d.site.brand || 'Rising Red';
-  // Then fetch real data from server
+  // Fetch fresh data from server in background
   try {
     const res = await fetch('/.netlify/functions/get-data');
     if (res.ok) {
       const saved = await res.json();
       if (saved && Object.keys(saved).length > 0) {
+        localStorage.setItem('rr_data', JSON.stringify(saved));
         d = dmerge(DEF, saved);
         applyTheme(d.theme); buildNav(d); buildPages(d);
         document.title = d.site.brand || 'Rising Red';
