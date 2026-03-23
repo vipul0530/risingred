@@ -1,6 +1,21 @@
 [functions]
   directory = "netlify/functions"
 
+# Never cache HTML — ensures browsers always fetch the latest page code
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Pragma = "no-cache"
+    Expires = "0"
+
+# Never cache Netlify function responses (dynamic site data)
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# CORS and defaults for everything else
 [[headers]]
   for = "/*"
   [headers.values]
