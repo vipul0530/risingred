@@ -267,6 +267,12 @@ async function init(){
   } catch(e) { /* use defaults */ }
 }
 init();
+// Safari BFCache fix: when Safari restores a frozen page from memory
+// (e.g. switching apps and coming back), force a fresh reload so the
+// latest code and content are always shown.
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) window.location.reload();
+});
 </script>
 </body>
 </html>
