@@ -139,7 +139,10 @@ footer{background:var(--dark);color:rgba(255,255,255,.65);padding:3rem 2rem;}
   #nav-items.open{display:flex;}
   .hamburger{display:flex;}
   .hero-in,.story-grid,.ct-grid{grid-template-columns:1fr;}
-  .hero-img-wrap{display:none;}
+  .hero-img-wrap{order:1;margin-bottom:2rem;}
+  .hero-in>div:first-child{order:2;}
+  .hero-frame{aspect-ratio:4/3;border-radius:2px 20% 2px 20%;}
+  .hero-badge{bottom:-10px;left:10px;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .ws-grid,.imp-grid,.partners-grid,.dn-cards{grid-template-columns:1fr;}
   .imp-card{grid-template-columns:1fr;}
@@ -258,10 +261,10 @@ async function init(){
     if (res.ok) {
       const saved = await res.json();
       if (saved && Object.keys(saved).length > 0) {
-        localStorage.setItem('rr_data', JSON.stringify(saved));
         d = dmerge(DEF, saved);
         applyTheme(d.theme); buildNav(d); buildPages(d);
         document.title = d.site.brand || 'Rising Red';
+        try { localStorage.setItem('rr_data', JSON.stringify(saved)); } catch(e) {}
       }
     }
   } catch(e) { /* use defaults */ }
