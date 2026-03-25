@@ -255,7 +255,7 @@ async function submitContact(){
   if(!n||!e||!m){alert('Please fill in name, email, and message.');return;}
   const btn=document.querySelector('.sub-btn');if(btn){btn.disabled=true;btn.textContent='Sending…';}
   try{
-    const res=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({'form-name':'contact',name:n,email:e,reason:r||'',message:m}).toString()});
+    const res=await fetch('/.netlify/functions/submit-contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,reason:r||'',message:m})});
     if(res.ok){const ok=document.getElementById('cf-ok');if(ok)ok.style.display='block';if(btn){btn.disabled=false;btn.textContent='Send Message';}}
     else{alert('Something went wrong. Please email us directly at rising.red14@gmail.com');if(btn){btn.disabled=false;btn.textContent='Send Message';}}
   }catch(err){alert('Something went wrong. Please email us directly at rising.red14@gmail.com');if(btn){btn.disabled=false;btn.textContent='Send Message';}}

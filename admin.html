@@ -156,6 +156,7 @@ input:checked+.slider:before{transform:translateX(16px);}
   <div class="ni" onclick="sp('community')"><span class="ic">💬</span>Community</div>
   <div class="ni" onclick="sp('contact')"><span class="ic">📬</span>Contact</div>
   <div class="ni" onclick="sp('donate')"><span class="ic">💝</span>Donate</div>
+  <div class="ni" onclick="sp('messages')"><span class="ic">✉️</span>Messages</div>
   <div class="sb-sec">Account</div>
   <div class="ni" onclick="sp('account')"><span class="ic">🔒</span>Password</div>
   <div class="ni" onclick="sp('data')"><span class="ic">💾</span>Backup & Data</div>
@@ -502,6 +503,11 @@ input:checked+.slider:before{transform:translateX(16px);}
   </div>
 </div>
 
+<div class="panel" id="p-messages">
+  <div class="ph"><h1>Messages</h1><p>Contact form submissions from the website.</p></div>
+  <div id="msgs-wrap"><div style="color:var(--muted);font-size:.88rem">Loading…</div></div>
+</div>
+
 </div><!-- /main -->
 </div><!-- /wrap -->
 </div><!-- /admin -->
@@ -599,7 +605,28 @@ function gv(id){const el=document.getElementById(id);return el?el.value:'';}
 function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
 
 // ── PANELS ──
-function sp(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));const p=document.getElementById('p-'+id);if(p)p.classList.add('active');event.currentTarget.classList.add('active');if(id==='impact')renderImpactList();if(id==='partners')renderPartnersList();if(id==='workshops')renderWorkshopsEditor();if(id==='pages')renderPagesManager();if(id==='donate')renderDonateTiers();if(id==='home')renderStoryCards();}
+function sp(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));const p=document.getElementById('p-'+id);if(p)p.classList.add('active');event.currentTarget.classList.add('active');if(id==='impact')renderImpactList();if(id==='partners')renderPartnersList();if(id==='workshops')renderWorkshopsEditor();if(id==='pages')renderPagesManager();if(id==='donate')renderDonateTiers();if(id==='home')renderStoryCards();if(id==='messages')loadMessages();}
+
+async function loadMessages(){
+  const wrap=document.getElementById('msgs-wrap');
+  wrap.innerHTML='<div style="color:var(--muted);font-size:.88rem">Loading…</div>';
+  try{
+    const pw=localStorage.getItem('rr_pw')||'';
+    const res=await fetch('/.netlify/functions/get-contacts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+    const msgs=await res.json();
+    if(!Array.isArray(msgs)||msgs.length===0){wrap.innerHTML='<div class="card" style="color:var(--muted);font-size:.88rem;text-align:center;padding:2rem">No messages yet.</div>';return;}
+    wrap.innerHTML=msgs.map((m,i)=>`<div class="card" style="margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem">
+        <div><strong style="font-size:.95rem">${esc(m.name)}</strong> <span style="color:var(--muted);font-size:.82rem">&lt;${esc(m.email)}&gt;</span></div>
+        <span style="font-size:.75rem;color:var(--muted)">${new Date(m.date).toLocaleString()}</span>
+      </div>
+      ${m.reason?`<div style="font-size:.78rem;color:var(--red);background:var(--pale);display:inline-block;padding:.2rem .6rem;border-radius:2rem;margin-bottom:.5rem">${esc(m.reason)}</div>`:''}
+      <p style="font-size:.9rem;color:var(--mid);white-space:pre-wrap">${esc(m.message)}</p>
+      <a href="mailto:${esc(m.email)}" style="display:inline-block;margin-top:.75rem;font-size:.82rem;color:var(--red);font-weight:500">Reply via email →</a>
+    </div>`).join('');
+  }catch(e){wrap.innerHTML='<div class="card" style="color:var(--red);font-size:.88rem">Failed to load messages.</div>';}
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 // ── DESIGN ──
 const PRESETS={red:{accent:'#c0392b',accentLight:'#e8564a',accentPale:'#fdf0ee',bg:'#faf7f4',dark:'#1a1008',mid:'#5c3d2e'},navy:{accent:'#1a3a6b',accentLight:'#2c5fb3',accentPale:'#eef2fb',bg:'#f7f8fc',dark:'#0d1f3c',mid:'#2d4a7a'},emerald:{accent:'#1a7a4a',accentLight:'#24a866',accentPale:'#edfaf3',bg:'#f5fbf7',dark:'#0d3d22',mid:'#2a6b42'},purple:{accent:'#7b2d8b',accentLight:'#a040b5',accentPale:'#f8edfb',bg:'#faf7fc',dark:'#3a1145',mid:'#6b2d7a'},gold:{accent:'#b8860b',accentLight:'#d4a017',accentPale:'#fdf8e8',bg:'#faf9f4',dark:'#3d2c00',mid:'#7a5c0a'}};
