@@ -157,10 +157,13 @@ footer{background:var(--dark);color:rgba(255,255,255,.65);padding:3rem 2rem;}
   <button class="hamburger" onclick="document.getElementById('nav-items').classList.toggle('open')"><span></span><span></span><span></span></button>
 </nav>
 <div id="site-pages"></div>
-<!-- Hidden form so Netlify detects it at build time -->
-<form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
+<!-- Static form so Netlify detects it at build time (display:none avoids parser issues) -->
+<form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" style="display:none">
   <input type="hidden" name="form-name" value="contact"/>
-  <input name="name"/><input name="email"/><select name="reason"></select><textarea name="message"></textarea>
+  <input name="name"/>
+  <input name="email"/>
+  <select name="reason"><option>General</option></select>
+  <textarea name="message"></textarea>
 </form>
 <footer>
   <div class="ft-in">
@@ -255,10 +258,18 @@ async function submitContact(){
   if(!n||!e||!m){alert('Please fill in name, email, and message.');return;}
   const btn=document.querySelector('.sub-btn');if(btn){btn.disabled=true;btn.textContent='Sending…';}
   try{
-    const res=await fetch('/.netlify/functions/submit-contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,reason:r||'',message:m})});
-    if(res.ok){const ok=document.getElementById('cf-ok');if(ok)ok.style.display='block';if(btn){btn.disabled=false;btn.textContent='Send Message';}}
-    else{alert('Something went wrong. Please email us directly at rising.red14@gmail.com');if(btn){btn.disabled=false;btn.textContent='Send Message';}}
-  }catch(err){alert('Something went wrong. Please email us directly at rising.red14@gmail.com');if(btn){btn.disabled=false;btn.textContent='Send Message';}}
+    const body=new URLSearchParams({'form-name':'contact',name:n,email:e,reason:r||'',message:m});
+    const res=await fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()});
+    if(res.ok){const ok=document.getElementById('cf-ok');if(ok)ok.style.display='block';}
+    else{throw new Error(res.status);}
+  }catch(err){
+    // Fallback: also try our function directly
+    try{
+      await fetch('/.netlify/functions/submit-contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,reason:r||'',message:m})});
+      const ok=document.getElementById('cf-ok');if(ok)ok.style.display='block';
+    }catch(e2){alert('Something went wrong. Please email us directly at rising.red14@gmail.com');}
+  }
+  if(btn){btn.disabled=false;btn.textContent='Send Message';}
 }
 async function init(){
   // Use cached data immediately to avoid flash of placeholder
