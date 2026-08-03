@@ -369,21 +369,10 @@ input:checked+.slider:before{transform:translateX(16px);}
     </div>
   </div>
   <div class="card">
-    <div class="card-hd">🌸 Your Profile</div>
-    <div class="f"><label>Your Photo</label>
-      <div class="img-area" onclick="trigUpload('founder-img')">
-        <input type="file" id="founder-img" accept="image/*" onchange="handleImg(this,'founder-img-prev','founderImg')"/>
-        <p>📸 Click to upload your photo</p>
-        <img class="img-prev" id="founder-img-prev"/>
-      </div>
-    </div>
-    <div class="row2">
-      <div class="f"><label>Your Name</label><input id="tm-name"/></div>
-      <div class="f"><label>Your Role/Title</label><input id="tm-role"/></div>
-    </div>
-    <div class="f"><label>Bio Paragraph 1</label><textarea id="tm-bio1"></textarea></div>
-    <div class="f"><label>Bio Paragraph 2</label><textarea id="tm-bio2"></textarea></div>
-    <div class="f"><label>Bio Paragraph 3</label><textarea id="tm-bio3"></textarea></div>
+    <div class="card-hd">👥 Team Members</div>
+    <p style="color:var(--muted);font-size:.83rem;margin-bottom:1rem">Add as many team members as you like. The first member is shown in the large featured layout; the rest appear as cards below. Use ↑ ↓ to reorder.</p>
+    <div id="team-members-list"></div>
+    <button class="btn btn-ghost btn-sm" style="margin-top:.85rem" onclick="openTeamModal(-1)">＋ Add Team Member</button>
   </div>
   <div class="card">
     <div class="card-hd">Join Box</div>
@@ -542,6 +531,21 @@ input:checked+.slider:before{transform:translateX(16px);}
   </div>
 </div>
 
+<!-- TEAM MEMBER MODAL -->
+<div class="mbg" id="tm-modal">
+  <div class="modal">
+    <div class="mhd"><h2 id="tm-modal-title">Add Team Member</h2><button class="mclose" onclick="closeM('tm-modal')">×</button></div>
+    <div class="f"><label>Photo</label>
+      <div class="img-area" onclick="trigUpload('tmm-img')"><input type="file" id="tmm-img" accept="image/*" onchange="handleImgModal(this,'tmm-prev')"/><p>📸 Click to upload photo</p><img class="img-prev" id="tmm-prev"/></div>
+    </div>
+    <div class="row2"><div class="f"><label>Name</label><input id="tmm-name"/></div><div class="f"><label>Role / Title</label><input id="tmm-role"/></div></div>
+    <div class="f"><label>Bio Paragraph 1</label><textarea id="tmm-bio1" rows="3"></textarea></div>
+    <div class="f"><label>Bio Paragraph 2 (optional)</label><textarea id="tmm-bio2" rows="3"></textarea></div>
+    <div class="f"><label>Bio Paragraph 3 (optional)</label><textarea id="tmm-bio3" rows="3"></textarea></div>
+    <div class="mft"><button class="btn btn-ghost" onclick="closeM('tm-modal')">Cancel</button><button class="btn btn-red" onclick="saveTeamMember()">Save Member</button></div>
+  </div>
+</div>
+
 <!-- CUSTOM PAGE MODAL -->
 <div class="mbg" id="cp-modal">
   <div class="modal">
@@ -605,7 +609,7 @@ function gv(id){const el=document.getElementById(id);return el?el.value:'';}
 function sv(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
 
 // ── PANELS ──
-function sp(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));const p=document.getElementById('p-'+id);if(p)p.classList.add('active');event.currentTarget.classList.add('active');if(id==='impact')renderImpactList();if(id==='partners')renderPartnersList();if(id==='workshops')renderWorkshopsEditor();if(id==='pages')renderPagesManager();if(id==='donate')renderDonateTiers();if(id==='home')renderStoryCards();if(id==='messages')loadMessages();}
+function sp(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));const p=document.getElementById('p-'+id);if(p)p.classList.add('active');event.currentTarget.classList.add('active');if(id==='impact')renderImpactList();if(id==='partners')renderPartnersList();if(id==='workshops')renderWorkshopsEditor();if(id==='pages')renderPagesManager();if(id==='donate')renderDonateTiers();if(id==='home')renderStoryCards();if(id==='team')renderTeam();if(id==='messages')loadMessages();}
 
 async function loadMessages(){
   const wrap=document.getElementById('msgs-wrap');
@@ -682,8 +686,14 @@ function delPartner(i){if(!confirm('Delete?'))return;const d=getData();d.partner
 function savePartnersHeader(){const d=getData();d.partners.pageLabel=gv('pt-label');d.partners.pageTitle=gv('pt-title');d.partners.pageSub=gv('pt-sub');saveData(d);}
 
 // ── TEAM ──
-function saveTeam(){const d=getData();d.team={pageLabel:gv('tm-label'),pageTitle:gv('tm-title'),founderImg:d.team.founderImg,founderName:gv('tm-name'),founderRole:gv('tm-role'),founderBio1:gv('tm-bio1'),founderBio2:gv('tm-bio2'),founderBio3:gv('tm-bio3'),joinTitle:gv('tm-jtitle'),joinText:gv('tm-jtext'),joinBtn:gv('tm-jbtn'),joinBtnTarget:gv('tm-jbtarget')};saveData(d);}
-function loadTeam(d){const t=d.team;sv('tm-label',t.pageLabel);sv('tm-title',t.pageTitle);sv('tm-name',t.founderName);sv('tm-role',t.founderRole);sv('tm-bio1',t.founderBio1);sv('tm-bio2',t.founderBio2);sv('tm-bio3',t.founderBio3);sv('tm-jtitle',t.joinTitle);sv('tm-jtext',t.joinText);sv('tm-jbtn',t.joinBtn);sv('tm-jbtarget',t.joinBtnTarget);if(t.founderImg)showPrev('founder-img-prev',t.founderImg);}
+let editTmIdx=-1;
+function teamMembers(d){const t=d.team;if(Array.isArray(t.members))return t.members;t.members=[{img:t.founderImg||'',name:t.founderName||'',role:t.founderRole||'',bio1:t.founderBio1||'',bio2:t.founderBio2||'',bio3:t.founderBio3||''}];return t.members;}
+function renderTeam(){const d=getData();sv('tm-label',d.team.pageLabel);sv('tm-title',d.team.pageTitle);sv('tm-jtitle',d.team.joinTitle);sv('tm-jtext',d.team.joinText);sv('tm-jbtn',d.team.joinBtn);sv('tm-jbtarget',d.team.joinBtnTarget);const members=teamMembers(d);const l=document.getElementById('team-members-list');l.innerHTML=members.map((m,i)=>`<div class="item-row"><div class="item-thumb">${m.img?`<img src="${m.img}"/>`:'🌸'}</div><div class="item-info"><strong>${esc(m.name)||'(no name)'}${i===0?' <span style="color:var(--red);font-weight:400;font-size:.72rem">★ Featured</span>':''}</strong><span>${esc(m.role)||''}</span></div><div class="item-acts">${i>0?`<button class="btn btn-ghost btn-sm" onclick="moveTeam(${i},-1)" title="Move up">↑</button>`:''}${i<members.length-1?`<button class="btn btn-ghost btn-sm" onclick="moveTeam(${i},1)" title="Move down">↓</button>`:''}<button class="btn btn-ghost btn-sm" onclick="openTeamModal(${i})">Edit</button><button class="btn btn-danger btn-sm" onclick="delTeamMember(${i})">Del</button></div></div>`).join('')||'<p style="color:var(--muted);font-size:.85rem">No team members yet. Click “Add Team Member” to get started.</p>';}
+function openTeamModal(idx){editTmIdx=idx;const d=getData();const members=teamMembers(d);document.getElementById('tm-modal-title').textContent=idx===-1?'Add Team Member':'Edit Team Member';const m=idx===-1?{name:'',role:'',bio1:'',bio2:'',bio3:'',img:''}:members[idx]||{};sv('tmm-name',m.name);sv('tmm-role',m.role);sv('tmm-bio1',m.bio1);sv('tmm-bio2',m.bio2);sv('tmm-bio3',m.bio3);const p=document.getElementById('tmm-prev');if(m.img){p.src=m.img;p.style.display='block';}else{p.src='';p.style.display='none';}document.getElementById('tm-modal').classList.add('open');}
+function saveTeamMember(){const d=getData();const members=teamMembers(d);const p=document.getElementById('tmm-prev');const m={name:gv('tmm-name'),role:gv('tmm-role'),bio1:gv('tmm-bio1'),bio2:gv('tmm-bio2'),bio3:gv('tmm-bio3'),img:(p&&p.style.display!=='none')?p.src:''};if(editTmIdx===-1)members.push(m);else members[editTmIdx]=m;d.team.members=members;saveData(d);closeM('tm-modal');renderTeam();}
+function delTeamMember(i){if(!confirm('Delete this team member?'))return;const d=getData();const members=teamMembers(d);members.splice(i,1);d.team.members=members;saveData(d);renderTeam();}
+function moveTeam(i,dir){const d=getData();const members=teamMembers(d);const j=i+dir;if(j<0||j>=members.length)return;const tmp=members[i];members[i]=members[j];members[j]=tmp;d.team.members=members;saveData(d);renderTeam();}
+function saveTeam(){const d=getData();d.team.pageLabel=gv('tm-label');d.team.pageTitle=gv('tm-title');d.team.joinTitle=gv('tm-jtitle');d.team.joinText=gv('tm-jtext');d.team.joinBtn=gv('tm-jbtn');d.team.joinBtnTarget=gv('tm-jbtarget');d.team.members=teamMembers(d);saveData(d);}
 
 // ── SURVEY ──
 function saveSurvey(){const d=getData();d.survey={pageLabel:gv('sv-label'),pageTitle:gv('sv-title'),pageSub:gv('sv-sub'),formIntro:gv('sv-intro'),googleFormUrl:gv('sv-url')};saveData(d);}
@@ -760,7 +770,7 @@ function importData(input){const f=input.files[0];if(!f)return;const r=new FileR
 function resetData(){if(!confirm('Reset ALL content to defaults? This cannot be undone.'))return;saveData(JSON.parse(JSON.stringify(DEF)));setTimeout(()=>{loadAll();toast();},1000);}
 
 // ── LOAD ALL ──
-async function loadAll(){await loadFromServer();const d=getData();loadDesign(d);loadSite(d);loadHome(d);loadTeam(d);loadSurvey(d);loadCommunity(d);loadContact(d);}
+async function loadAll(){await loadFromServer();const d=getData();loadDesign(d);loadSite(d);loadHome(d);renderTeam();loadSurvey(d);loadCommunity(d);loadContact(d);}
 </script>
 </body>
 </html>
