@@ -601,6 +601,7 @@ const DEF={theme:{accent:'#c0392b',accentLight:'#e8564a',accentPale:'#fdf0ee',bg
 let _cachedData = null;
 function getData(){return _cachedData ? JSON.parse(JSON.stringify(_cachedData)) : JSON.parse(JSON.stringify(DEF));}
 function dmerge(d,s){const o=JSON.parse(JSON.stringify(d));for(const k in s){if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&s[k]!==null){o[k]=dmerge(d[k]||{},s[k]);}else{o[k]=s[k];}}return o;}
+function reconcilePages(d){if(!Array.isArray(d.pages)){d.pages=JSON.parse(JSON.stringify(DEF.pages));return d;}const have=new Set(d.pages.map(p=>p.id));DEF.pages.forEach((dp,i)=>{if(have.has(dp.id))return;let at=d.pages.length;for(let j=i-1;j>=0;j--){const idx=d.pages.findIndex(p=>p.id===DEF.pages[j].id);if(idx>=0){at=idx+1;break;}}d.pages.splice(at,0,JSON.parse(JSON.stringify(dp)));have.add(dp.id);});return d;}
 async function saveData(d){
   _cachedData = d;
   const pw = localStorage.getItem('rr_pw') || 'risingred2026';
@@ -627,7 +628,7 @@ async function loadFromServer(){
     if (res.ok) {
       const saved = await res.json();
       if (saved && Object.keys(saved).length > 0) {
-        _cachedData = dmerge(DEF, saved);
+        _cachedData = reconcilePages(dmerge(DEF, saved));
       } else {
         _cachedData = JSON.parse(JSON.stringify(DEF));
       }

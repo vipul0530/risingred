@@ -285,6 +285,9 @@ const DEF = {
 };
 
 function dmerge(d,s){const o=JSON.parse(JSON.stringify(d));for(const k in s){if(s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k])&&s[k]!==null){o[k]=dmerge(d[k]||{},s[k]);}else{o[k]=s[k];}}return o;}
+// Ensure any built-in page added in code (e.g. Brand Wear) appears even when the
+// saved data has an older pages list, inserting it in its default position.
+function reconcilePages(d){if(!Array.isArray(d.pages)){d.pages=JSON.parse(JSON.stringify(DEF.pages));return d;}const have=new Set(d.pages.map(p=>p.id));DEF.pages.forEach((dp,i)=>{if(have.has(dp.id))return;let at=d.pages.length;for(let j=i-1;j>=0;j--){const idx=d.pages.findIndex(p=>p.id===DEF.pages[j].id);if(idx>=0){at=idx+1;break;}}d.pages.splice(at,0,JSON.parse(JSON.stringify(dp)));have.add(dp.id);});return d;}
 function applyTheme(t){const r=document.documentElement.style;r.setProperty('--accent',t.accent);r.setProperty('--accent-light',t.accentLight);r.setProperty('--accent-pale',t.accentPale);r.setProperty('--bg',t.bg);r.setProperty('--dark',t.dark);r.setProperty('--mid',t.mid||'#5c3d2e');r.setProperty('--font-display',`'${t.fontDisplay}',serif`);r.setProperty('--font-body',`'${t.fontBody}',sans-serif`);}
 function showPage(id){document.querySelectorAll('.rr-page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('pg-'+id);if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}document.getElementById('nav-items').classList.remove('open');}
 function buildNav(d){const nb=document.getElementById('nav-brand');nb.textContent=d.site.brand;document.getElementById('ft-brand').textContent=d.site.brand;document.getElementById('ft-copy').textContent=d.site.footerCopy;const ni=document.getElementById('nav-items');ni.innerHTML='';const fl=document.getElementById('ft-links');fl.innerHTML='';const all=[...d.pages,...(d.customPages||[])].filter(p=>p.visible!==false);all.forEach(pg=>{const li=document.createElement('li');const a=document.createElement('a');a.textContent=pg.label;a.onclick=()=>showPage(pg.id);if(pg.isDonate)a.className='nav-cta';li.appendChild(a);ni.appendChild(li);const fa=document.createElement('a');fa.textContent=pg.label;fa.onclick=()=>showPage(pg.id);fl.appendChild(fa);});}
@@ -328,6 +331,7 @@ async function init(){
     const cached = localStorage.getItem('rr_data');
     if (cached) { d = dmerge(DEF, JSON.parse(cached)); }
   } catch(e) {}
+  d = reconcilePages(d);
   applyTheme(d.theme); buildNav(d); buildPages(d);
   document.title = d.site.brand || 'Rising Red';
   // Fetch fresh data from server in background
@@ -336,7 +340,7 @@ async function init(){
     if (res.ok) {
       const saved = await res.json();
       if (saved && Object.keys(saved).length > 0) {
-        d = dmerge(DEF, saved);
+        d = reconcilePages(dmerge(DEF, saved));
         applyTheme(d.theme); buildNav(d); buildPages(d);
         document.title = d.site.brand || 'Rising Red';
         try { localStorage.setItem('rr_data', JSON.stringify(saved)); } catch(e) {}
