@@ -97,6 +97,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(250,247,244,
 .join-box{background:var(--accent-pale);border-radius:20px;padding:3rem;text-align:center;max-width:700px;margin:4rem auto 3rem;}
 .join-box h3{font-family:var(--font-display);font-size:2rem;color:var(--dark);margin-bottom:1rem;}
 .join-box p{color:var(--mid);margin-bottom:2rem;}
+.bw-goal{background:var(--accent-pale);color:var(--accent);font-weight:500;text-align:center;border-radius:2rem;padding:.75rem 1.5rem;max-width:540px;margin:0 auto 3rem;font-size:.95rem;}
+.bw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;}
+.bw-card{background:white;border-radius:18px;overflow:hidden;border:1px solid var(--border);display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s;}
+.bw-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(192,57,43,.13);}
+.bw-img{aspect-ratio:1/1;background:#f0ebe7;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.bw-img img{width:100%;height:100%;object-fit:cover;object-position:center 18%;}
+.bw-img .ni{color:var(--muted);font-size:.82rem;text-align:center;padding:1.5rem;}
+.bw-body{padding:1.5rem;display:flex;flex-direction:column;flex:1;}
+.bw-body h3{font-family:var(--font-display);font-size:1.5rem;color:var(--dark);margin-bottom:.35rem;}
+.bw-desc{font-size:.85rem;color:var(--mid);line-height:1.6;margin-bottom:1.25rem;flex:1;}
+.bw-foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:auto;}
+.bw-price{font-family:var(--font-display);font-size:1.6rem;color:var(--accent);font-weight:600;}
+.bw-price-muted{font-size:.9rem;color:var(--muted);}
+.bw-shop{background:var(--accent);color:white;padding:.5rem 1.4rem;border-radius:2rem;font-size:.85rem;font-weight:500;text-decoration:none;transition:background .2s;white-space:nowrap;}
+.bw-shop:hover{background:var(--accent-light);}
+.bw-cta{background:var(--accent-pale);border-radius:20px;padding:3rem 2rem;text-align:center;max-width:760px;margin:3.5rem auto 0;}
+.bw-cta h3{font-family:var(--font-display);font-size:2rem;color:var(--dark);margin-bottom:.85rem;}
+.bw-cta>p{color:var(--mid);margin:0 auto 1.75rem;max-width:560px;}
+.bw-note{font-size:.8rem;color:var(--muted);margin-top:1.5rem;}
 .partners-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;margin-top:2rem;}
 .pt-card{background:white;border-radius:16px;padding:2rem;border:1px solid var(--border);display:flex;gap:1.5rem;align-items:flex-start;transition:box-shadow .2s;}
 .pt-card:hover{box-shadow:0 10px 30px rgba(192,57,43,.1);}
@@ -156,7 +175,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.65);padding:3rem 2rem;}
   .hero-frame{aspect-ratio:4/3;border-radius:2px 20% 2px 20%;}
   .hero-badge{bottom:-10px;left:10px;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .ws-grid,.imp-grid,.partners-grid,.dn-cards{grid-template-columns:1fr;}
+  .ws-grid,.imp-grid,.partners-grid,.dn-cards,.bw-grid{grid-template-columns:1fr;}
   .imp-card{grid-template-columns:1fr;}
   .team-wrap{grid-template-columns:1fr;}
 }
@@ -194,6 +213,7 @@ const DEF = {
     {id:'impact',label:'Impact',type:'impact',visible:true},
     {id:'partners',label:'Partners',type:'partners',visible:true},
     {id:'team',label:'Team',type:'team',visible:true},
+    {id:'brandwear',label:'Brand Wear',type:'brandwear',visible:true},
     {id:'survey',label:'Feedback',type:'survey',visible:true},
     {id:'community',label:'Community',type:'community',visible:true},
     {id:'contact',label:'Contact',type:'contact',visible:true},
@@ -234,6 +254,21 @@ const DEF = {
     pageLabel:'Collaborations',pageTitle:'Our Partners',pageSub:'Together, we create greater impact.',
     items:[{name:'Balance Her',desc:'We love partnering with Balance Her to help girls work with their cycles. Their cycle-tracking boards come into our workshops with 10% off promo codes for participants.',url:'https://thebalanceher.com',emoji:'⚖️',img:''}]
   },
+  brandwear:{
+    pageLabel:'Wear the Movement',pageTitle:'Rising Red Brand Wear',
+    pageSub:'Buy our brand wear to support our organization and efforts! Every piece helps us reach more girls, run more workshops, and spread the word — and all funds raised go directly to Rising Red.',
+    goalText:'Help us reach our goal of 50 items sold!',
+    buyUrl:'https://www.customink.com/fundraising/rising-red-2026-brand-wear?utm_campaign=desktop-post-launch-v3&utm_content=rising-red-2026-brand-wear&utm_medium=social&utm_source=copy-link',
+    buyBtn:'Shop & Support →',
+    ctaTitle:'Ready to represent Rising Red?',
+    ctaText:'Browse the full collection, pick your size, and check out securely through our CustomInk fundraiser. Wear it proud — you\'re powering the movement.',
+    note:'Secure checkout is handled by our official CustomInk fundraiser. 100% of proceeds support Rising Red.',
+    items:[
+      {name:'Pullover Hoodie',price:'$30',desc:'Gildan Midweight 50/50 · Unisex · Black · Sizes YXS–XXXXL',img:'brandwear/hoodie.png'},
+      {name:'Crewneck Sweatshirt',price:'',desc:'Gildan Midweight 50/50 · Unisex · Black',img:'brandwear/crewneck.png'},
+      {name:'Classic Tee',price:'',desc:'Gildan 100% Cotton T-Shirt · Unisex · Black',img:'brandwear/tshirt.png'}
+    ]
+  },
   team:{
     pageLabel:'The People Behind Rising Red',pageTitle:'Meet the Team',
     founderImg:'',founderName:'Arya Bhavsar',founderRole:'Founder & Workshop Leader',
@@ -254,11 +289,12 @@ function applyTheme(t){const r=document.documentElement.style;r.setProperty('--a
 function showPage(id){document.querySelectorAll('.rr-page').forEach(p=>p.classList.remove('active'));const p=document.getElementById('pg-'+id);if(p){p.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}document.getElementById('nav-items').classList.remove('open');}
 function buildNav(d){const nb=document.getElementById('nav-brand');nb.textContent=d.site.brand;document.getElementById('ft-brand').textContent=d.site.brand;document.getElementById('ft-copy').textContent=d.site.footerCopy;const ni=document.getElementById('nav-items');ni.innerHTML='';const fl=document.getElementById('ft-links');fl.innerHTML='';const all=[...d.pages,...(d.customPages||[])].filter(p=>p.visible!==false);all.forEach(pg=>{const li=document.createElement('li');const a=document.createElement('a');a.textContent=pg.label;a.onclick=()=>showPage(pg.id);if(pg.isDonate)a.className='nav-cta';li.appendChild(a);ni.appendChild(li);const fa=document.createElement('a');fa.textContent=pg.label;fa.onclick=()=>showPage(pg.id);fl.appendChild(fa);});}
 function buildPages(d){const c=document.getElementById('site-pages');c.innerHTML='';const all=[...d.pages,...(d.customPages||[])];all.forEach((pg,i)=>{const div=document.createElement('div');div.className='rr-page'+(i===0?' active':'');div.id='pg-'+pg.id;div.innerHTML=renderPage(pg,d);c.appendChild(div);});}
-function renderPage(pg,d){switch(pg.type){case'home':return rHome(d.home);case'workshops':return rWorkshops(d.workshops);case'impact':return rImpact(d.impact);case'partners':return rPartners(d.partners);case'team':return rTeam(d.team);case'survey':return rSurvey(d.survey);case'community':return rCommunity(d.community);case'contact':return rContact(d.contact,d.site.contactEmail);case'donate':return rDonate(d.donate);case'custom':return rCustom(pg);default:return`<div class="rr-sec"><div class="rr-con"><h1 class="s-title">${pg.label}</h1><p style="color:var(--mid)">${pg.content||''}</p></div></div>`;}}
+function renderPage(pg,d){switch(pg.type){case'home':return rHome(d.home);case'workshops':return rWorkshops(d.workshops);case'impact':return rImpact(d.impact);case'partners':return rPartners(d.partners);case'brandwear':return rBrandWear(d.brandwear);case'team':return rTeam(d.team);case'survey':return rSurvey(d.survey);case'community':return rCommunity(d.community);case'contact':return rContact(d.contact,d.site.contactEmail);case'donate':return rDonate(d.donate);case'custom':return rCustom(pg);default:return`<div class="rr-sec"><div class="rr-con"><h1 class="s-title">${pg.label}</h1><p style="color:var(--mid)">${pg.content||''}</p></div></div>`;}}
 function rHome(h){return`<section class="hero"><div class="hero-in"><div><span class="s-lbl a1">${h.heroLabel}</span><h1 class="hero-h1 a2">${h.heroHeadline} <em>${h.heroHeadlineEm}</em></h1><p class="hero-sub a2">${h.heroSub}</p><div class="hero-btns a3"><button class="btn-p" onclick="showPage('${h.heroBtn1Target}')">${h.heroBtn1}</button><button class="btn-o" onclick="showPage('${h.heroBtn2Target}')">${h.heroBtn2}</button></div><a href="https://www.instagram.com/rising.red/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.25rem;color:var(--mid);font-size:.88rem;text-decoration:none;font-weight:500;transition:color .2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--mid)'"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>Follow us on Instagram</a></div><div class="hero-img-wrap"><div class="hero-frame">${h.heroImg?`<img src="${h.heroImg}" alt="Rising Red"/>`:'<div class="ni" style="color:rgba(255,255,255,.7);text-align:center;padding:2rem;font-size:.85rem">🌸<br><br>Add your photo in Admin</div>'}</div><div class="hero-badge"><div class="badge-n">${h.badgeNum}</div><div class="badge-t">${h.badgeText}</div></div></div></div></section><div class="stats-bar"><div class="stats-grid">${h.stats.map(s=>`<div><div class="stn">${s.num}</div><div class="stl">${s.label}</div></div>`).join('')}</div></div><section class="rr-sec"><div class="rr-con"><div class="story-grid"><div class="story-text"><span class="s-lbl">${h.storyLabel}</span><h2 class="s-title">${h.storyTitle}</h2><p>${h.storyP1}</p><p>${h.storyP2}</p><p>${h.storyP3}</p><button class="btn-p" onclick="showPage('workshops')" style="margin-top:1.5rem">See Our Workshops →</button></div><div class="story-cards">${h.storyCards.map(c=>`<div class="sc"><div class="sc-icon">${c.icon}</div><h4>${c.title}</h4><p>${c.text}</p></div>`).join('')}</div></div></div></section>`;}
 function rWorkshops(w){return`<div class="pg-hero"><span class="s-lbl">${w.pageLabel}</span><h1 class="s-title">${w.pageTitle}</h1><p class="s-sub" style="margin:0 auto">${w.pageSub}</p></div><section class="rr-sec"><div class="rr-con"><div class="ws-grid">${w.items.map(ws=>`<div class="ws-card"><div class="ws-img">${ws.img?`<img src="${ws.img}" alt="${ws.title}"/>`:'<div class="ni">📸 Add photo in Admin</div>'}</div><div class="ws-body"><span class="ws-tag">${ws.tag}</span><h3>${ws.title}</h3><p>${ws.desc}</p><ul>${ws.bullets.map(b=>`<li>${b}</li>`).join('')}</ul></div></div>`).join('')}</div><div style="text-align:center;margin-top:3rem;padding:2.5rem;background:var(--accent-pale);border-radius:16px"><h3 style="font-family:var(--font-display);font-size:1.75rem;margin-bottom:.75rem">${w.ctaTitle}</h3><p style="color:var(--mid);margin-bottom:1.5rem">${w.ctaSub}</p><button class="btn-p" onclick="showPage('${w.ctaBtnTarget}')">${w.ctaBtn} →</button></div></div></section>`;}
 function rImpact(imp){return`<div class="pg-hero"><span class="s-lbl">${imp.pageLabel}</span><h1 class="s-title">${imp.pageTitle}</h1><p class="s-sub" style="margin:0 auto">${imp.pageSub}</p></div><section class="rr-sec"><div class="rr-con"><div class="imp-grid">${imp.items.map(i=>`<div class="imp-card"><div class="imp-thumb">${i.img?`<img src="${i.img}" alt="${i.org}"/>`:'<div class="ni">📍</div>'}</div><div class="imp-body"><div class="imp-date">${i.date}</div><h3>${i.org}</h3><p>${i.story}</p></div></div>`).join('')}</div></div></section>`;}
 function rPartners(p){return`<section class="rr-sec"><div class="rr-con"><span class="s-lbl">${p.pageLabel}</span><h1 class="s-title">${p.pageTitle}</h1><p class="s-sub">${p.pageSub}</p><div class="partners-grid">${p.items.map(pt=>`<div class="pt-card"><div class="pt-logo">${pt.img?`<img src="${pt.img}"/>`:(pt.emoji||'🤝')}</div><div class="pt-info"><h3>${pt.name}</h3><p>${pt.desc}</p>${pt.url?`<a href="${pt.url}" target="_blank" class="pt-link">Visit website →</a>`:''}</div></div>`).join('')}<div class="pt-card" style="border-style:dashed;opacity:.5"><div class="pt-logo">➕</div><div class="pt-info"><h3>Become a Partner</h3><p>Interested in collaborating? We'd love to connect.</p><a onclick="showPage('contact')" class="pt-link" style="cursor:pointer">Reach Out →</a></div></div></div></div></section>`;}
+function rBrandWear(b){const items=(b.items||[]).map(it=>`<div class="bw-card"><div class="bw-img">${it.img?`<img src="${it.img}" alt="${it.name||''}"/>`:'<div class="ni">👕 Add photo in Admin</div>'}</div><div class="bw-body"><h3>${it.name||''}</h3><p class="bw-desc">${it.desc||''}</p><div class="bw-foot">${it.price?`<span class="bw-price">${it.price}</span>`:'<span class="bw-price-muted">See store →</span>'}<a href="${b.buyUrl}" target="_blank" rel="noopener" class="bw-shop">Shop</a></div></div></div>`).join('');return`<div class="pg-hero"><span class="s-lbl">${b.pageLabel}</span><h1 class="s-title">${b.pageTitle}</h1><p class="s-sub" style="margin:0 auto">${b.pageSub}</p></div><section class="rr-sec"><div class="rr-con">${b.goalText?`<div class="bw-goal">🎯 ${b.goalText}</div>`:''}<div class="bw-grid">${items}</div><div class="bw-cta"><h3>${b.ctaTitle||''}</h3><p>${b.ctaText||''}</p><a href="${b.buyUrl}" target="_blank" rel="noopener" class="btn-p" style="display:inline-block;text-decoration:none">${b.buyBtn||'Shop Now →'}</a>${b.note?`<p class="bw-note">${b.note}</p>`:''}</div></div></section>`;}
 function teamMembers(t){if(Array.isArray(t.members)&&t.members.length)return t.members;return [{img:t.founderImg||'',name:t.founderName||'',role:t.founderRole||'',bio1:t.founderBio1||'',bio2:t.founderBio2||'',bio3:t.founderBio3||''}];}
 function tmBios(m){return [m.bio1,m.bio2,m.bio3].filter(b=>b&&String(b).trim()).map(b=>`<p>${b}</p>`).join('');}
 function rTeam(t){const members=teamMembers(t);const blocks=members.map(m=>`<div class="team-wrap"><div class="founder-frame">${m.img?`<img src="${m.img}" alt="${m.name||''}"/>`:'<div class="ni">🌸<br><br>Add photo in Admin</div>'}</div><div class="founder-info"><h2>${m.name||''}</h2><span class="founder-role">${m.role||''}</span>${tmBios(m)}</div></div>`).join('');return`<div class="pg-hero"><span class="s-lbl">${t.pageLabel}</span><h1 class="s-title">${t.pageTitle}</h1></div><section class="rr-sec rr-sec-team"><div class="rr-con">${blocks}<div class="join-box"><h3>${t.joinTitle}</h3><p>${t.joinText}</p><button class="btn-p" onclick="showPage('${t.joinBtnTarget}')">${t.joinBtn} →</button></div></div></section>`;}
